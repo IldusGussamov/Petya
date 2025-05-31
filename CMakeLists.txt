@@ -11,7 +11,9 @@ add_executable(arkanoid
     src/main.cpp
     src/Entity.cpp
     src/Platform.cpp
-)
+    src/Ball.cpp
+    src/Brick.cpp
+    )
 
 target_include_directories(arkanoid PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
