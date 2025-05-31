@@ -1,0 +1,47 @@
+# Автоматически сгенерированные файлы CMake
+build/
+out/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+*.cmake
+Makefile
+*.ninja
+*.user
+*.suo
+*.sln
+*.vcxproj*
+*.vcproj*
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+
+# Бинарные файлы и исполняемые файлы
+*.exe
+*.out
+*.app
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+*.o
+*.obj
+
+# Файлы IDE (Visual Studio Code, CLion)
+.vscode/
+.idea/
+*.code-workspace
+
+# Резервные копии и временные файлы
+*~
+*.bak
+*.tmp
+*.swp
+
+# Логи и системные файлы
+*.log
+*.pid
+.DS_Store
+Thumbs.db

@@ -1,4 +1,4 @@
-#include <GL/freeglut.h>
+#pragma once
 
 using Coordinate = float; // тип для координат и компонент векторов
 using Dimension = float; // тип для ширины/высоты
@@ -19,15 +19,17 @@ class Entity
     Entity(Point position, Velocity velocity, Dimension width, Dimension height); // конструктор
 
     virtual void draw() = 0; // Отрисовка сущности
-    void update(); //обновление координат и границ
-    void setVelocity(); // установка скорости
-    Velocity getVelocity(); // получение скорости
-    void getPosition(); // получение позиции
+    virtual void update() = 0; //обновление координат и границ
+
+    void setVelocity(Velocity velocity); // установка скорости
+    Velocity getVelocity() const; // получение скорости
+    Point getPosition() const; // получение позиции
     
-    private:
+    protected:
     Point position; // позиция сущности (центр)
     Dimension width, height; // ширина и высота
     Point borders[4]; // Границы сущности (Координаты вершин прямоугольника);
+    Velocity velocity; // скорость сущности
 
 };
 
