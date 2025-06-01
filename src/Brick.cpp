@@ -67,10 +67,10 @@ void Brick::draw()
 
 void Brick::updateBorders()
 {
-    // Лево
+    // Низ
     borders[0] = {position.x - width / 2, position.y - height / 2};
     borders[1] = {position.x + width / 2, position.y - height / 2};
-    // Право
+    // Вверх
     borders[2] = {position.x + width / 2, position.y + height / 2};
     borders[3] = {position.x - width / 2, position.y + height / 2};
 } 
