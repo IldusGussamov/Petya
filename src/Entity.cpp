@@ -4,8 +4,7 @@ Entity::Entity(Point position, Velocity velocity, Dimension width, Dimension hei
 {
     this->position = position;
     this->velocity = velocity;
-    this->width = width;
-    this->height = height;
+    this->size = {width, height};
 }
 
 Point Entity::getPosition() const
@@ -16,6 +15,11 @@ Point Entity::getPosition() const
 Velocity Entity::getVelocity() const
 {
     return this->velocity;
+}
+
+Size Entity::getDimensions() const
+{
+    return size;
 }
 
 void Entity::setVelocity(Velocity velocity)
