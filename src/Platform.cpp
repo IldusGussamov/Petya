@@ -1,13 +1,7 @@
 #include "Platform.hpp"
 #include <GL/freeglut.h>
 
-Platform::Platform(Point position, Velocity velocity) : Entity(position, velocity, PLATFORM_WIDTH, PLATFORM_HEIGHT)
-{
-    this->borders[Sides::LEFT_TOP] = {position.x - size.width / 2, position.y + size.height / 2};
-    this->borders[Sides::RIGHT_TOP] = {position.x + size.width / 2, position.y + size.height / 2};
-    this->borders[Sides::RIGHT_BOTTOM] = {position.x + size.width / 2, position.y - size.height / 2};
-    this->borders[Sides::LEFT_BOTTOM] = {position.x - size.width / 2, position.y - size.height / 2};
-}
+Platform::Platform(Point position, Velocity velocity) : Entity(position, velocity, PLATFORM_WIDTH, PLATFORM_HEIGHT) {}
 void Platform::draw()
 {
     glPushMatrix();

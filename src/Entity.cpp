@@ -5,6 +5,11 @@ Entity::Entity(Point position, Velocity velocity, Dimension width, Dimension hei
     this->position = position;
     this->velocity = velocity;
     this->size = {width, height};
+
+    this->borders[Sides::LEFT_TOP] = {position.x - size.width / 2, position.y + size.height / 2};
+    this->borders[Sides::RIGHT_TOP] = {position.x + size.width / 2, position.y + size.height / 2};
+    this->borders[Sides::RIGHT_BOTTOM] = {position.x + size.width / 2, position.y - size.height / 2};
+    this->borders[Sides::LEFT_BOTTOM] = {position.x - size.width / 2, position.y - size.height / 2};
 }
 
 Point Entity::getPosition() const
