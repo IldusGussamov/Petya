@@ -39,6 +39,7 @@ constexpr Dimension PLATFORM_WIDTH = 0.2; // ширина платформы
 constexpr Dimension PLATFORM_HEIGHT = 0.02; // высота платформы
 
 Velocity calculateBounceDirection(Velocity old_velocty, Normal normal); // вычисление вектора скорости после упругого удара
+
 void drawRectangle(Point* borders); // рисование прямоугольника по точкам границы
 
 template<class T>
