@@ -1,31 +1,6 @@
 #pragma once
+#include "utils.hpp"
 
-enum Sides
-{
-    LEFT_TOP = 0,
-    RIGHT_TOP,
-    RIGHT_BOTTOM,
-    LEFT_BOTTOM
-};
-
-using Coordinate = float; // тип для координат и компонент векторов
-using Dimension = float; // тип для ширины/высоты
-
-struct Size
-{
-    Dimension width;
-    Dimension height;
-};
-
-struct Point // точка
-{
-    Coordinate x, y; // компоненты
-};
-
-struct Velocity // вектор скорости
-{
-    Coordinate x, y; // компоненты
-};
 
 class Entity
 {
@@ -40,6 +15,7 @@ class Entity
     Point getPosition() const; // получение позиции
     Size getDimensions() const; // получение габаритов
     void checkCollision(const Entity& other) const; // проверка на столкновение с другой сущностью
+    Point* getBorders();
 
     protected:
     Point position; // позиция сущности (центр)

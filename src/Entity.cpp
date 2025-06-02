@@ -32,3 +32,13 @@ void Entity::setVelocity(Velocity velocity)
     this->velocity = velocity;
 }
 
+void Entity::checkCollision(const Entity &other) const
+{
+
+}
+
+Point* Entity::getBorders()
+{
+    return borders;
+}
+
