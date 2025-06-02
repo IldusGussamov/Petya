@@ -1,10 +1,12 @@
 #pragma once
-#include "Entity.hpp"
+#include "Entity.hpp" // наследник Platform
 
 class Platform : public Entity
 {   
     public:
-    Platform(Point position, Velocity velocity);
-    void draw() override;
+    Platform(Point position, Velocity velocity); // конструктор
+
+    // определение виртуальных методов 
+    void draw() override; 
     private:
 };

@@ -1,13 +1,14 @@
 #include "Brick.hpp"
 #include <GL/glut.h>
+#include <utils.hpp>
 
-Brick::Brick(Point position, Dimension width, Dimension height, int health)
+Brick::Brick(Point position, Dimension width, Dimension height, Health health)
     : Entity(position, Velocity{0, 0}, width, height), health(health), destroyed(false)
 {
     updateBorders();
 }
 
-int Brick::getHealth() const
+Health Brick::getHealth() const
 {
     return health;
 }
@@ -46,31 +47,16 @@ void Brick::draw()
     // цвета для различия прочности
     if (health >= 3)
     {
-        glColor3f(1.0f, 0.0f, 0.0f); // Красный
+        glColor3f(1.0f, 0.0f, 0.0f); // красный
     }
     else if (health == 2)
     {
-        glColor3f(1.0f, 1.0f, 0.0f); // Желтый
+        glColor3f(1.0f, 1.0f, 0.0f); // желтый
     }
     else
     {
-        glColor3f(0.0f, 0.0f, 1.0f); // Синий
+        glColor3f(0.0f, 0.0f, 1.0f); // синий
     }
 
-    glBegin(GL_QUADS);
-    for (int i = 0; i < 4; ++i)
-    {
-        glVertex2f(borders[i].x, borders[i].y);
-    }
-    glEnd();
+    drawRectangle(borders);
 }
-
-void Brick::updateBorders()
-{
-    // Низ
-    borders[0] = {position.x - size.width / 2, position.y - size.height / 2};
-    borders[1] = {position.x + size.width / 2, position.y - size.height / 2};
-    // Вверх
-    borders[2] = {position.x + size.width / 2, position.y + size.height / 2};
-    borders[3] = {position.x - size.width / 2, position.y + size.height / 2};
-} 

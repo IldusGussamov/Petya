@@ -4,19 +4,19 @@ Entity::Entity(Point position, Velocity velocity, Dimension width, Dimension hei
 {
     this->position = position;
     this->velocity = velocity;
-    this->size = {width, height};
+    size = {width, height};
 
-    this->updateBorders();
+    updateBorders();
 }
 
 Point Entity::getPosition() const
 {
-    return this->position;
+    return position;
 }
 
 Velocity Entity::getVelocity() const
 {
-    return this->velocity;
+    return velocity;
 }
 
 Size Entity::getDimensions() const
@@ -41,10 +41,10 @@ Point* Entity::getBorders()
 
 void Entity::updateBorders()
 {
-    this->borders[Sides::LEFT_TOP] = {position.x - size.width / 2, position.y + size.height / 2};
-    this->borders[Sides::RIGHT_TOP] = {position.x + size.width / 2, position.y + size.height / 2};
-    this->borders[Sides::RIGHT_BOTTOM] = {position.x + size.width / 2, position.y - size.height / 2};
-    this->borders[Sides::LEFT_BOTTOM] = {position.x - size.width / 2, position.y - size.height / 2};
+    borders[Sides::LEFT_TOP] = {position.x - size.width / 2, position.y + size.height / 2};
+    borders[Sides::RIGHT_TOP] = {position.x + size.width / 2, position.y + size.height / 2};
+    borders[Sides::RIGHT_BOTTOM] = {position.x + size.width / 2, position.y - size.height / 2};
+    borders[Sides::LEFT_BOTTOM] = {position.x - size.width / 2, position.y - size.height / 2};
 }
 
 void Entity::updatePosition()

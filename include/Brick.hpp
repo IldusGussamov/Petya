@@ -1,25 +1,22 @@
 #pragma once
-#include "Entity.hpp"
+#include "Entity.hpp" // наследник Brick
 
 class Brick : public Entity
 {
 protected:
-    int health;     // Здоровье
-    bool destroyed; // сломан иль нет
+    Health health;     // здоровье
+    bool destroyed; // статус жизни
     
 public:
-    Brick(Point position, Dimension width, Dimension height, int health);
+    Brick(Point position, Dimension width, Dimension height, Health health); // конструктор
 
-    int getHealth() const; // кол-во хп
+    Health getHealth() const; // получение количества здоровья
 
-    bool isDestroyed() const; // унчтожен ли
+    bool isDestroyed() const; // провер
 
-    void takeDamage(int damage); // изменение хп
+    void takeDamage(int damage); // наненесение урона
 
-    // Изменение дефолт функций
+    //Определение виртуальных методов
     void update() override;
     void draw() override;
-
-    // Обновляет границы кирпича (вызывается при изменении позиции/размера)
-    void updateBorders();
 };
