@@ -1,17 +1,6 @@
 #pragma once
+#include "utils.hpp"
 
-using Coordinate = float; // тип для координат и компонент векторов
-using Dimension = float; // тип для ширины/высоты
-
-struct Point // точка
-{
-    Coordinate x, y; // компоненты
-};
-
-struct Velocity // вектор скорости
-{
-    Coordinate x, y; // компоненты
-};
 
 class Entity
 {
@@ -24,10 +13,15 @@ class Entity
     void setVelocity(Velocity velocity); // установка скорости
     Velocity getVelocity() const; // получение скорости
     Point getPosition() const; // получение позиции
-    
+    Size getDimensions() const; // получение габаритов
+    void checkCollision(const Entity& other) const; // проверка на столкновение с другой сущностью
+    Point* getBorders();
+    void updateBorders();
+    void updatePosition();
+
     protected:
     Point position; // позиция сущности (центр)
-    Dimension width, height; // ширина и высота
+    Size size; // ширина и высота
     Point borders[4]; // Границы сущности (Координаты вершин прямоугольника);
     Velocity velocity; // скорость сущности
 

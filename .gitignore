@@ -45,3 +45,8 @@ Makefile
 *.pid
 .DS_Store
 Thumbs.db
+
+#Файлы Ильдуса
+include/ildus.hpp
+src/ildus.cpp
+src/main.cpp

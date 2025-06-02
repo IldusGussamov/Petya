@@ -68,9 +68,9 @@ void Brick::draw()
 void Brick::updateBorders()
 {
     // Низ
-    borders[0] = {position.x - width / 2, position.y - height / 2};
-    borders[1] = {position.x + width / 2, position.y - height / 2};
+    borders[0] = {position.x - size.width / 2, position.y - size.height / 2};
+    borders[1] = {position.x + size.width / 2, position.y - size.height / 2};
     // Вверх
-    borders[2] = {position.x + width / 2, position.y + height / 2};
-    borders[3] = {position.x - width / 2, position.y + height / 2};
+    borders[2] = {position.x + size.width / 2, position.y + size.height / 2};
+    borders[3] = {position.x - size.width / 2, position.y + size.height / 2};
 } 
