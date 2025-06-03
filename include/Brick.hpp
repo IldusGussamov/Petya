@@ -18,5 +18,6 @@ public:
 
     //Определение виртуальных методов
     void update() override;
+    
     void draw() override;
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 
 enum Sides // индексация вершин прямоугольника
 {
@@ -35,8 +36,9 @@ struct Velocity
   
 };
 
-constexpr Dimension PLATFORM_WIDTH = 0.2; // ширина платформы
+constexpr Dimension PLATFORM_WIDTH = 2; // ширина платформы
 constexpr Dimension PLATFORM_HEIGHT = 0.02; // высота платформы
+constexpr Angle MAX_BOUNCE_ANGLE = M_PI/3; // максимальный угол отскока мяча от платформы
 
 Velocity calculateBounceDirection(Velocity old_velocty, Normal normal); // вычисление вектора скорости после упругого удара
 
@@ -45,8 +47,14 @@ void drawRectangle(Point* borders); // рисование прямоугольн
 template<class T>
 T getNorm(T x, T y); // вычисление нормы вектора
 
+Velocity rotateVelocity(Velocity old_velocity, Angle angle); // поворот вектора скорости
+
 Coordinate dot(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2); // скалярное произведение векторов
 
 Coordinate cross(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2); // векторное произведение векторов
+
+Velocity calculateBounceDirectonPlatform(Velocity old_velocity, Coordinate difference); // вычисление скорости после отскока от платформы
+
+Angle calculateAngleBetweenVectors(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2); // вычисление угла между векторами
 
 
