@@ -36,7 +36,10 @@ struct Velocity
   
 };
 
-constexpr Dimension PLATFORM_WIDTH = 2; // ширина платформы
+constexpr Point MAP_POSITION{0.1, 0.1}; // позиция карты
+constexpr Size MAP_SIZE{1, 1}; // размеры карты
+constexpr Dimension PLATFORM_ZONE = 0; // высота свободной области
+constexpr Dimension PLATFORM_WIDTH = 0.1; // ширина платформы
 constexpr Dimension PLATFORM_HEIGHT = 0.02; // высота платформы
 constexpr Angle MAX_BOUNCE_ANGLE = M_PI/3; // максимальный угол отскока мяча от платформы
 
