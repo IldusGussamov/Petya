@@ -13,6 +13,8 @@ public:
 
     void setVelocity(Velocity velocity); // установка скорости
 
+    void setPosition(Point position); // телепорт сущности на указанную позицию
+
     Velocity getVelocity() const; // получение скорости
 
     Point getPosition() const; // получение позиции

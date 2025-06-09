@@ -1,5 +1,4 @@
 #pragma once
-#include "utils.hpp"
 #include "Platform.hpp"
 #include "Ball.hpp"
 #include "Brick.hpp"
@@ -8,23 +7,28 @@
 class Map
 {
 private:
-    Point position;
-    Size size;
-    Platform platform;
-    std::vector<Ball> balls;
-    std::vector<Brick> bricks;
-    bool isThrowBall = false;
+    Point position;            // позиция карты (левая верхняя вершина)
+    Size size;                 // размер карты (Ox вправо, а Oy вниз)
+    std::vector<Ball> balls;   // мячи
+    std::vector<Brick> bricks; // плитки
+    bool isThrowBall = false;  // статус полета мяча
 
 public:
-    Map(Point position, Size size);
-    void draw();
-    void update();
+    Platform platform;         // платформа
 
-    Coordinate leftBorder();
-    Coordinate rightBorder();
-    Coordinate topBorder();
-    Coordinate buttomBorder();
+    Map(Point position, Size size); // конструктор
+    void draw();                    // отрисовка карты
+    void update();                  // обновление карты
+    void throwBall();               // бросок мяча
+    void bounceOffWalls();          // проверка столкновения о стену и отскок мяча
 
-    Point getPosition();
-    Size getSize();
+    Coordinate getLeftBorder();   // получение левой границы
+    Coordinate getRightBorder();  // получение правой границы
+    Coordinate getTopBorder();    // получение верхней границы
+    Coordinate getButtomBorder(); // получение нижней границы
+
+    bool isBallThrown() const; // проверка на то, что мяч брошен
+
+    Point getPosition(); // получение позиции карты
+    Size getSize();      // получение размеров карты
 };

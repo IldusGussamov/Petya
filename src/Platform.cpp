@@ -1,15 +1,35 @@
 #include "Platform.hpp"
 #include <GL/freeglut.h>
+#include "utils.hpp"
 
-Platform::Platform(Point position, Velocity velocity) : Entity(position, velocity, PLATFORM_WIDTH, PLATFORM_HEIGHT) {}
-void Platform::draw()
+Platform::Platform(Point position, Velocity velocity) : Entity(position, velocity, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 {
-    glPushMatrix();
-    glBegin(GL_QUADS);
-    glVertex2f(borders[Sides::LEFT_TOP].x, borders[Sides::LEFT_TOP].y);
-    glVertex2f(borders[Sides::RIGHT_TOP].x, borders[Sides::RIGHT_TOP].y);
-    glVertex2f(borders[Sides::RIGHT_BOTTOM].x, borders[Sides::RIGHT_BOTTOM].y);
-    glVertex2f(borders[Sides::LEFT_BOTTOM].x, borders[Sides::LEFT_BOTTOM].y);
-    glEnd();
-    glPopMatrix();
+    hp = 4; // начальное здоровье платформы
+    updateBorders();   
+}
+
+ void Platform::draw()
+ {
+    glColor3f(0, 0, 0);
+    drawBorderRectangle(borders);
+ }
+void Platform::update()
+{
+    position.x += velocity.x;
+    position.y += velocity.y;
+    updateBorders();
+}
+
+Health Platform::getHealth()
+{
+    return hp;
+}
+
+void Platform::hit()
+{
+    hp--;
+    if (hp < 0)
+    {
+        hp = 0;
+    }
 }

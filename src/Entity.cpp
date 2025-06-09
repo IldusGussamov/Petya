@@ -6,7 +6,6 @@ Entity::Entity(Point position, Velocity velocity, Dimension width, Dimension hei
     this->position = position;
     this->velocity = velocity;
     size = {width, height};
-
     updateBorders();
 }
 
@@ -34,7 +33,7 @@ bool Entity::checkCollision(const Entity &other)
 {
     bool collisionX = (getLeftBorder() <= other.getRightBorder()) && (getRightBorder() >= other.getLeftBorder());
     bool collisionY = (getBottomBorder() <= other.getTopBorder()) && (getTopBorder() >= other.getBottomBorder());
-return collisionX && collisionY;
+    return collisionX && collisionY;
 }
 
 void Entity::updateBorders()
@@ -75,4 +74,9 @@ Coordinate Entity::getTopBorder() const
 Coordinate Entity::getBottomBorder() const
 {
     return borders[RIGHT_BOTTOM].y;
+}
+
+void Entity::setPosition(Point position)
+{
+    this->position = position;
 }

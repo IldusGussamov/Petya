@@ -1,15 +1,18 @@
 #pragma once
 #include "Map.hpp"
 
-Map map(MAP_POSITION, MAP_SIZE);
+extern bool PRESSED_KEY_A;
+extern bool PRESSED_KEY_D;
+
+extern Map map;
 
 void renderScene();
 
-void updateScene();
+void keyboardDown(unsigned char K, int x, int y);
 
-void keyboardDown();
+void keyboardUp(unsigned char K, int x, int y);
 
-void keyboardUp();
+void timerFunc(int value);
 
 
 
