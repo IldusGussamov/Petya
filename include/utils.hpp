@@ -9,14 +9,14 @@ enum Sides // индексация вершин прямоугольника
     LEFT_BOTTOM
 };
 
-using Coordinate = float; // тип для координат
-using Dimension = float; // тип для размеров
-using Angle = float; // тип для углов
+using Coordinate = float;    // тип для координат
+using Dimension = float;     // тип для размеров
+using Angle = float;         // тип для углов
 using Health = unsigned int; // тип для здоровья
 
 struct Size // гарабирты
 {
-    Dimension width; // ширина
+    Dimension width;  // ширина
     Dimension height; // высота
 };
 
@@ -33,21 +33,26 @@ struct Normal // нормаль
 struct Velocity
 {
     Coordinate x, y; // компоненты вектора скорости
-  
 };
 
-constexpr Point MAP_POSITION{0.1, 0.1}; // позиция карты
-constexpr Size MAP_SIZE{1, 1}; // размеры карты
-constexpr Dimension PLATFORM_ZONE = 0; // высота свободной области
-constexpr Dimension PLATFORM_WIDTH = 0.1; // ширина платформы
-constexpr Dimension PLATFORM_HEIGHT = 0.02; // высота платформы
-constexpr Angle MAX_BOUNCE_ANGLE = M_PI/3; // максимальный угол отскока мяча от платформы
+constexpr Point MAP_POSITION{-0.9, 0.9};                                                                                         // позиция карты
+constexpr Size MAP_SIZE{1, 1.8};                                                                                                 // размеры карты
+constexpr Dimension PLATFORM_ZONE = MAP_SIZE.height * 0.3;                                                                       // высота свободной области
+constexpr Dimension PLATFORM_WIDTH = 0.2;                                                                                        // ширина платформы
+constexpr Dimension PLATFORM_HEIGHT = 0.02;                                                                                      // высота платформы
+constexpr Coordinate PLATFORM_SPEED = 0.001 * 0.35 * 0.3;                                                                        // скорость платформы
+constexpr Point PLATFORM_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, MAP_POSITION.y - MAP_SIZE.height + PLATFORM_ZONE / 2}; // начальная позиция платформы относительно игрового поля
+constexpr Angle MAX_BOUNCE_ANGLE = M_PI * 0.4;                                                                                   // максимальный угол отскока мяча от платформы
+constexpr Point BALL_START_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, MAP_POSITION.y - MAP_SIZE.height / 2};               // начальные координаты мяча
+// extern bool PRESSED_KEY_A;
+// extern bool PRESSED_KEY_D;
 
 Velocity calculateBounceDirection(Velocity old_velocty, Normal normal); // вычисление вектора скорости после упругого удара
 
-void drawRectangle(Point* borders); // рисование прямоугольника по точкам границы
+void drawBorderRectangle(Point *borders); // рисование прямоугольника по точкам границы
+void drawRectangle(Point position, Size size); // рисование прямоугольника по позиции и размеру
 
-template<class T>
+template <class T>
 T getNorm(T x, T y); // вычисление нормы вектора
 
 Velocity rotateVelocity(Velocity old_velocity, Angle angle); // поворот вектора скорости
@@ -56,8 +61,6 @@ Coordinate dot(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2); // �
 
 Coordinate cross(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2); // векторное произведение векторов
 
-Velocity calculateBounceDirectonPlatform(Velocity old_velocity, Coordinate difference); // вычисление скорости после отскока от платформы
+Velocity calculateBounceDirectonPlatform(Velocity old_velocity, Coordinate difference, Dimension PLATFORM_W = PLATFORM_WIDTH); // вычисление скорости после отскока от платформы
 
 Angle calculateAngleBetweenVectors(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2); // вычисление угла между векторами
-
-
