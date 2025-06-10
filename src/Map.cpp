@@ -1,12 +1,20 @@
 #include "Map.hpp"
 #include "utils.hpp"
+#include "PowerfulBrick.hpp"
 #include <GL/freeglut.h>
-#include <iostream>
 
 Map::Map(Point position, Size size) : platform(PLATFORM_POSITION, {0, 0})
 {
     this->position = position;
     this->size = size;
+    PowerfulBrick brick{{position.x + size.width / 2 + 0.3, position.y - size.height / 3}, 0.2, 0.1};
+    PowerfulBrick brick1{{position.x + size.width / 2 - 0.3, position.y - size.height / 3}, 0.2, 0.1};
+    PowerfulBrick brick2{{position.x + size.width / 2, position.y - size.height / 3 + 0.3}, 0.2, 0.1};
+    PowerfulBrick brick3{{position.x + size.width / 2, position.y - size.height / 3 - 0.3}, 0.2, 0.1};
+    bricks.push_back(brick);
+    bricks.push_back(brick1);
+    bricks.push_back(brick2);
+    bricks.push_back(brick3);
 }
 
 void Map::draw()
@@ -14,6 +22,10 @@ void Map::draw()
     glColor3f(1, 1, 1);
     drawRectangle(position, size);
     platform.draw();
+    for (Brick &brick : bricks)
+    {
+        brick.draw();
+    }
     for (Ball &ball : balls)
     {
         ball.draw();
@@ -31,10 +43,22 @@ void Map::update()
             this->balls.emplace_back(BALL_START_POSITION, platform.getVelocity(), BALL_SIZE);
     }
     platform.update();
+    for (Ball &ball : balls)
+    {
+        ball.draw();
+    }
     bounceOffWalls();
     for (Ball &ball : balls)
     {
         ball.Collision(platform);
+        for (Brick &brick : bricks)
+        {
+            Velocity old_vel = ball.getVelocity();
+            ball.Collision(brick);
+            Velocity new_vel = ball.getVelocity();
+            if (old_vel.x != new_vel.x || old_vel.y != new_vel.y)
+                brick.takeDamage(1);
+        }
         if (!this->isThrowBall)
         {
             ball.setVelocity(platform.getVelocity());

@@ -20,8 +20,26 @@ void Ball::update()
 
 void Ball::Collision(const Platform &platform)
 {
-    if(this->checkCollision(platform))
+    if (this->checkCollision(platform))
     {
-        this->setVelocity(calculateBounceDirectonPlatform(this->getVelocity(), platform.getPosition().x-this->position.x));
+        this->setVelocity(calculateBounceDirectonPlatform(this->getVelocity(), platform.getPosition().x - this->position.x));
+    }
+}
+
+void Ball::Collision(const Brick &brick)
+{
+    if (this->checkCollision(brick))
+    {
+        Normal normal;
+
+        Coordinate x = position.x - brick.getPosition().x;
+        Coordinate y = position.y - brick.getPosition().y;
+
+        if(abs(x) <= abs(y))
+             normal = {0, y/abs(y)};
+        if(abs(x) >= abs(y))
+            normal = {x/abs(x), 0};
+
+        this->setVelocity(calculateBounceDirection(this->getVelocity(), normal));
     }
 }

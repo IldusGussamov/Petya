@@ -10,5 +10,5 @@ void SimpleBrick::draw()
 {
     if (isDestroyed()) return;
     glColor3f(1.0f, 0.0f, 0.0f); // Красный цвет
-    drawRectangle(getBorders());
+    drawBorderRectangle(this->borders);
 } 

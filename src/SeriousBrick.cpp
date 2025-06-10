@@ -15,5 +15,5 @@ void SeriousBrick::draw()
         case 2: glColor3f(1.0f, 1.0f, 0.0f); break;
         case 1: glColor3f(1.0f, 0.5f, 0.0f); break;
     }
-    drawRectangle(getBorders());
+    drawBorderRectangle(this->borders); // был убран getBorders() и было дано название для отрисовки по границе
 }

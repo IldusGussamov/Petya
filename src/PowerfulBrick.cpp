@@ -16,5 +16,5 @@ void PowerfulBrick::draw()
         case 2: glColor3f(0.5f, 0.0f, 0.8f); break;
         case 1: glColor3f(0.8f, 0.0f, 0.8f); break;
     }
-    drawRectangle(getBorders());
+    drawBorderRectangle(this->borders);
 }
