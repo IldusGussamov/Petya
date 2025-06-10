@@ -13,19 +13,29 @@ public:
 
     void setVelocity(Velocity velocity); // установка скорости
 
+    void setPosition(Point position); // телепорт сущности на указанную позицию
+
     Velocity getVelocity() const; // получение скорости
 
     Point getPosition() const; // получение позиции
 
     Size getDimensions() const; // получение габаритов
 
-    void checkCollision(const Entity &other) const; // проверка на столкновение с другой сущностью
-
-    Point *getBorders(); // получение границ
+    bool checkCollision(const Entity &other); // проверка на столкновение с другой сущностью
 
     void updateBorders(); // обновление границ
 
     void updatePosition(); // обновление позиции
+
+    void resetVelocity(); // сброс скорости
+
+    Coordinate getLeftBorder() const; // получение левой границы
+
+    Coordinate getRightBorder() const; // получение правой границы
+
+    Coordinate getTopBorder() const; // получение верхней границы
+
+    Coordinate getBottomBorder() const; // получение нижней границы
 
 protected:
     Point position; // позиция сущности (центр)

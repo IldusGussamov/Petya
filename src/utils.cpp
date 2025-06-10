@@ -8,11 +8,11 @@ Velocity rotateVelocity(Velocity old_velocity, Angle angle)
     return new_velocity;
 }
 
-Velocity calculateBounceDirectonPlatform(Velocity old_velocity, Coordinate difference)
+Velocity calculateBounceDirectonPlatform(Velocity old_velocity, Coordinate difference, Dimension PLATFOM_W)
 {
     Velocity new_velocity{0, getNorm(old_velocity.x, old_velocity.y)};
     Normal normal{0, 1};
-    Angle rotateAngle =  MAX_BOUNCE_ANGLE * 2 * difference/PLATFORM_WIDTH;
+    Angle rotateAngle = MAX_BOUNCE_ANGLE * 2 * difference / PLATFOM_W;
     return rotateVelocity(new_velocity, rotateAngle);
 }
 
@@ -28,7 +28,7 @@ Velocity calculateBounceDirection(Velocity old_velocity, Normal normal)
     return new_velocity;
 }
 
-void drawRectangle(Point *borders)
+void drawBorderRectangle(Point *borders)
 {
     glPushMatrix();
     glBegin(GL_QUADS);
@@ -58,9 +58,21 @@ Coordinate cross(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2)
 
 Angle calculateAngleBetweenVectors(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2)
 {
-    Dimension norm_one = getNorm(x1, y1);        // норма старой скорости
-    Dimension norm_two = getNorm(x2, y2);        // норма нормали
-    Coordinate dotVectors = dot(x1, y1, x2, y2); // скалярное произведение нормали и старой скорости
-    Angle angleBetweenVectors = acos(dotVectors / (norm_one * norm_two));
+    Dimension norm_one = getNorm(x1, y1);                                 // норма старой скорости
+    Dimension norm_two = getNorm(x2, y2);                                 // норма нормали
+    Coordinate dotVectors = dot(x1, y1, x2, y2);                          // скалярное произведение нормали и старой скорости
+    Angle angleBetweenVectors = acos(dotVectors / (norm_one * norm_two)); // угол между двумя векторами
     return angleBetweenVectors;
+}
+
+void drawRectangle(Point position, Size size)
+{
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glVertex2d(position.x, position.y);
+    glVertex2d(position.x + size.width, position.y);
+    glVertex2d(position.x + size.width, position.y - size.height);
+    glVertex2d(position.x, position.y - size.height);
+    glEnd();
+    glPopMatrix();
 }
