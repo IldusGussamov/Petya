@@ -19,6 +19,7 @@ int main(int argc, char **argv)
     glutInitWindowSize(800, 400);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
     glutCreateWindow("Program");
+
     glutDisplayFunc(renderScene);
     glutKeyboardFunc(keyboardDown);
     glutTimerFunc(1000 / 60, timerFunc, 0);
@@ -26,6 +27,10 @@ int main(int argc, char **argv)
     glutMainLoop();
     return 0;
 }
+
+
+// файлы написал, а на гите они пустые пупупу
+
 
 // void updateScene()
 // {
