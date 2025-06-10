@@ -42,12 +42,21 @@ void Map::update()
         if (platform.getHealth())
             this->balls.emplace_back(BALL_START_POSITION, platform.getVelocity(), BALL_SIZE);
     }
+    
     platform.update();
     for (Ball &ball : balls)
     {
         ball.draw();
     }
     bounceOffWalls();
+
+    for(int i = 0; i < bricks.size(); i++)
+    {
+        Brick brick = bricks[i];
+        if (!brick.getHealth())
+            bricks.erase(bricks.begin() + i);
+    }
+
     for (Ball &ball : balls)
     {
         ball.Collision(platform);
