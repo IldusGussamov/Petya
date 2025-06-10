@@ -47,6 +47,8 @@ constexpr Coordinate BALL_SPEED = 0.02; // скорость мяча
 constexpr Dimension BALL_SIZE = 0.01 * MAP_SIZE.height; // диаметр мяча
 constexpr Point BALL_START_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, PLATFORM_POSITION.y + PLATFORM_HEIGHT / 2 + BALL_SIZE / 2}; // начальные координаты мяча
 
+extern bool isGameOver;
+
 // скорость мяча
 Velocity calculateBounceDirection(Velocity old_velocty, Normal normal); // вычисление вектора скорости после упругого удара
 

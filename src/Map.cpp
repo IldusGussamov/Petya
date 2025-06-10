@@ -34,6 +34,9 @@ void Map::draw()
 
 void Map::update()
 {
+    if (!platform.getHealth())
+        isGameOver = true;
+
     if (!balls.size())
     {
         platform.hit();

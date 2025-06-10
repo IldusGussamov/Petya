@@ -2,6 +2,8 @@
 #include <math.h>
 #include <GL/freeglut.h>
 
+bool isGameOver = false;
+
 Velocity rotateVelocity(Velocity old_velocity, Angle angle)
 {
     Velocity new_velocity = {cos(angle) * old_velocity.x - sin(angle) * old_velocity.y, sin(angle) * old_velocity.x + cos(angle) * old_velocity.y}; // новый вектор скорости

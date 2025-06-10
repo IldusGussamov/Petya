@@ -16,6 +16,8 @@ void renderScene()
 
 void keyboardDown(unsigned char K, int x, int y)
 {
+    if (isGameOver)
+        return;
     switch (K)
     {
     case ' ':
