@@ -13,8 +13,9 @@ add_executable(arkanoid
     src/Platform.cpp
     src/Ball.cpp
     src/Brick.cpp
-    src/ildus.cpp
     src/utils.cpp
+    src/Map.cpp
+    src/Game.cpp
     )
 
 target_include_directories(arkanoid PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)

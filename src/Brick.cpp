@@ -51,12 +51,12 @@ void Brick::draw()
     }
     else if (health == 2)
     {
-        glColor3f(1.0f, 1.0f, 0.0f); // желтый
+        glColor3f(1.0f, 1.0f, 0.0f); // жёлтый
     }
     else
     {
         glColor3f(0.0f, 0.0f, 1.0f); // синий
     }
 
-    drawRectangle(borders);
+    drawBorderRectangle(borders);
 }
