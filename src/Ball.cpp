@@ -1,6 +1,7 @@
 #include "Ball.hpp"
 #include "Platform.hpp"
 #include <GL/freeglut.h>
+#include <iostream>
 
 Ball::Ball(Point position, Velocity velocity, Dimension size) : Entity(position, velocity, size, size)
 {
@@ -8,7 +9,7 @@ Ball::Ball(Point position, Velocity velocity, Dimension size) : Entity(position,
 
 void Ball::draw()
 {
-    glColor3f(0, 1, 0);
+    glColor3f(0, 0.9, 1);
     drawBorderRectangle(borders);
 }
 void Ball::update()
@@ -26,20 +27,21 @@ void Ball::Collision(const Platform &platform)
     }
 }
 
-void Ball::Collision(const Brick &brick)
+bool Ball::Collision(const Brick &brick)
 {
     if (this->checkCollision(brick))
     {
         Normal normal;
-
-        Coordinate x = position.x - brick.getPosition().x;
-        Coordinate y = position.y - brick.getPosition().y;
-
-        if(abs(x) <= abs(y))
-             normal = {0, y/abs(y)};
-        if(abs(x) >= abs(y))
-            normal = {x/abs(x), 0};
-
+        Coordinate x = (position.x - brick.getPosition().x) / (brick.getDimensions().width / 2 + this->getDimensions().width / 2);
+        Coordinate y = (position.y - brick.getPosition().y) / (brick.getDimensions().height / 2 + this->getDimensions().height / 2);
+        if (abs(x) <= abs(y))
+            normal = {0, y / abs(y)};
+        else if (abs(x) >= abs(y))
+            normal = {x / abs(x), 0};
+        else if (abs(x) == abs(y))
+            normal = {x / abs(x), y / abs(y)};
         this->setVelocity(calculateBounceDirection(this->getVelocity(), normal));
+        return true;
     }
+    return false;
 }

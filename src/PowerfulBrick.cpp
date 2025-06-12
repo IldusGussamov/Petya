@@ -6,15 +6,15 @@ PowerfulBrick::PowerfulBrick(Point position, Dimension width, Dimension height)
 {
 }
 
-void PowerfulBrick::draw()
+void PowerfulBrick::draw() 
 {
     if (isDestroyed()) return;
 
     // плавный переход от синего к фиолетовому
     switch (getHealth()) {
-        case 3: glColor3f(0.0f, 0.0f, 1.0f); break;
-        case 2: glColor3f(0.5f, 0.0f, 0.8f); break;
-        case 1: glColor3f(0.8f, 0.0f, 0.8f); break;
+        case 3: glColor3f(0.4f, 0.3f, 0.8f); break;
+        case 2: glColor3f(0.2549f, 0.1294f, 0.6039f); break;
+        case 1:  glColor3f(0.0f, 0.4f, 0.8f); break;
     }
     drawBorderRectangle(this->borders);
 }

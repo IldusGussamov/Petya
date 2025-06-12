@@ -5,13 +5,14 @@ int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
     glutInitWindowPosition(0, 0);
-    glutInitWindowSize(800, 400);
+    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-    glutCreateWindow("Program");
+    glutCreateWindow("Petya");
+    glutFullScreen();
 
     glutDisplayFunc(renderScene);
     glutKeyboardFunc(keyboardDown);
-    glutTimerFunc(1000 / 60, timerFunc, 0);
+    glutTimerFunc(1000 / FPS, timerFunc, 0);
     glutKeyboardUpFunc(keyboardUp);
     glutMainLoop();
     return 0;

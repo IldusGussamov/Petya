@@ -8,12 +8,18 @@ SeriousBrick::SeriousBrick(Point position, Dimension width, Dimension height)
 
 void SeriousBrick::draw()
 {
-    if (isDestroyed()) return;
+    if (isDestroyed())
+        return;
 
     // Желтый при 2 HP, оранжевый при 1 HP
-    switch (getHealth()) {
-        case 2: glColor3f(1.0f, 1.0f, 0.0f); break;
-        case 1: glColor3f(1.0f, 0.5f, 0.0f); break;
+    switch (getHealth())
+    {
+    case 2:
+        glColor3f(0.2549f, 0.1294f, 0.6039f);
+        break;
+    case 1:
+        glColor3f(0.0f, 0.4f, 0.8f);
+        break;
     }
     drawBorderRectangle(this->borders); // был убран getBorders() и было дано название для отрисовки по границе
 }

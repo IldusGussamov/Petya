@@ -10,7 +10,7 @@ Platform::Platform(Point position, Velocity velocity) : Entity(position, velocit
 
  void Platform::draw()
  {
-    glColor3f(0, 0, 0);
+    glColor3f(0.35, 0.42, 0.49);
     drawBorderRectangle(borders);
  }
 void Platform::update()

@@ -16,6 +16,14 @@ void renderScene()
 
 void keyboardDown(unsigned char K, int x, int y)
 {
+    switch (K)
+    {
+    case 'r':
+    {
+        map.resetMap();
+        break;
+    }
+    }
     if (isGameOver)
         return;
     switch (K)
@@ -36,6 +44,15 @@ void keyboardDown(unsigned char K, int x, int y)
         PRESSED_KEY_D = true;
         break;
     }
+    case 'h':
+    {
+        map.addBall();
+        break;
+    }
+        {
+            map.addBall();
+            break;
+        }
     }
 }
 
@@ -47,7 +64,7 @@ void timerFunc(int value)
         map.platform.setVelocity({PLATFORM_SPEED, 0});
     map.update();
     glutPostRedisplay();
-    glutTimerFunc(1000 / 60, timerFunc, 0);
+    glutTimerFunc(1000 / FPS, timerFunc, 0);
 }
 
 void keyboardUp(unsigned char K, int x, int y)

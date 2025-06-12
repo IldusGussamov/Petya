@@ -10,5 +10,5 @@ public:
     void draw() override;
     void update() override;
     void Collision(const Platform &platform);
-    void Collision(const Brick &brick);
+    bool Collision(const Brick &brick);
 };

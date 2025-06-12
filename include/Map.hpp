@@ -10,7 +10,7 @@ private:
     Point position;            // позиция карты (левая верхняя вершина)
     Size size;                 // размер карты (Ox вправо, а Oy вниз)
     std::vector<Ball> balls;   // мячи
-    std::vector<Brick> bricks; // плитки
+    std::vector<Brick*> bricks; // плитки
     bool isThrowBall = false;  // статус полета мяча
 
 public:
@@ -21,6 +21,9 @@ public:
     void update();                  // обновление карты
     void throwBall();               // бросок мяча
     void bounceOffWalls();          // проверка столкновения о стену и отскок мяча
+    void generateBricks();          // генерация плиток
+    void addBall();
+    void resetMap(); // сброс карты
 
     Coordinate getLeftBorder();   // получение левой границы
     Coordinate getRightBorder();  // получение правой границы
