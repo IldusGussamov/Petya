@@ -1,11 +1,11 @@
 #include "Entity.hpp"
+#include <iostream>
 
 Entity::Entity(Point position, Velocity velocity, Dimension width, Dimension height)
 {
     this->position = position;
     this->velocity = velocity;
     size = {width, height};
-
     updateBorders();
 }
 
@@ -29,14 +29,11 @@ void Entity::setVelocity(Velocity velocity)
     this->velocity = velocity;
 }
 
-void Entity::checkCollision(const Entity &other) const
+bool Entity::checkCollision(const Entity &other)
 {
-
-}
-
-Point* Entity::getBorders()
-{
-    return borders;
+    bool collisionX = (getLeftBorder() <= other.getRightBorder()) && (getRightBorder() >= other.getLeftBorder());
+    bool collisionY = (getBottomBorder() <= other.getTopBorder()) && (getTopBorder() >= other.getBottomBorder());
+    return collisionX && collisionY;
 }
 
 void Entity::updateBorders()
@@ -53,3 +50,33 @@ void Entity::updatePosition()
     position.y += velocity.y;
 }
 
+void Entity::resetVelocity()
+{
+    velocity.x = 0;
+    velocity.y = 0;
+}
+
+Coordinate Entity::getLeftBorder() const
+{
+    return borders[LEFT_TOP].x;
+}
+
+Coordinate Entity::getRightBorder() const
+{
+    return borders[RIGHT_TOP].x;
+}
+
+Coordinate Entity::getTopBorder() const
+{
+    return borders[LEFT_TOP].y;
+}
+
+Coordinate Entity::getBottomBorder() const
+{
+    return borders[RIGHT_BOTTOM].y;
+}
+
+void Entity::setPosition(Point position)
+{
+    this->position = position;
+}

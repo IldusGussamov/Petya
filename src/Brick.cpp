@@ -39,24 +39,24 @@ void Brick::update()
     }
 }
 
-void Brick::draw()
+void Brick::draw() 
 {
-    if (destroyed)
-        return;
+    // if (destroyed)
+    //     return;
 
-    // цвета для различия прочности
-    if (health >= 3)
-    {
-        glColor3f(1.0f, 0.0f, 0.0f); // красный
-    }
-    else if (health == 2)
-    {
-        glColor3f(1.0f, 1.0f, 0.0f); // желтый
-    }
-    else
-    {
-        glColor3f(0.0f, 0.0f, 1.0f); // синий
-    }
+    // // цвета для различия прочности
+    // if (health >= 3)
+    // {
+    //     glColor3f(1.0f, 0.0f, 0.0f); // красный
+    // }
+    // else if (health == 2)
+    // {
+    //     glColor3f(1.0f, 1.0f, 0.0f); // жёлтый
+    // }
+    // else
+    // {
+    //     glColor3f(0.0f, 0.0f, 1.0f); // синий
+    // }
 
-    drawRectangle(borders);
+    // drawBorderRectangle(borders);
 }
