@@ -139,7 +139,7 @@ void Map::update()
 void Map::moveBricksByPatterns()
 {
     // Двигаем кирпичи только каждый второй кадр - надо будет решить раз в сколько
-    if (BMC % 2 != 0)
+    if (BMC % 240 != 0)
         return;
 
     for (auto brick : bricks)
