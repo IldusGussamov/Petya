@@ -86,6 +86,10 @@ void Map::update()
         }
     }
 
+    // Костя, 2 строки
+    BMC++;
+    moveBricksByPatterns();
+
     platform.update();
 
     bounceOffWalls();
@@ -129,6 +133,116 @@ void Map::update()
         }
         ball.update();
     }
+}
+
+// Костя, 2 функции далее
+void Map::moveBricksByPatterns()
+{
+    // Двигаем кирпичи только каждый второй кадр - надо будет решить раз в сколько
+    if (BMC % 2 != 0)
+        return;
+
+    for (auto brick : bricks)
+    {
+        if (!brick->hasPattern())
+            continue;
+
+        const auto &pattern = brick->getMovePattern();
+        int currentDir = brick->getCurrentPattern();
+
+        for (int i = 0; i < 4; ++i)
+        {
+            int dir = (currentDir + i) % 4;
+
+            if (pattern[dir] > 0 && canBrickMove(brick, dir))
+            {
+                Point newPos = brick->getPosition();
+                switch (dir)
+                {
+                case 0:
+                    newPos.x -= BRICK_WIDTH;
+                    break;
+                case 1:
+                    newPos.x += BRICK_WIDTH;
+                    break;
+                case 2:
+                    newPos.y += BRICk_HEIGHT;
+                    break;
+                case 3:
+                    newPos.y -= BRICk_HEIGHT;
+                    break;
+                }
+
+                brick->setPosition(newPos);
+                brick->decrementPattern(dir);
+                brick->setCurrentPattern((dir + 1) % 4);
+                break;
+            }
+        }
+    }
+}
+
+bool Map::canBrickMove(const Brick *brick, int direction) const
+{
+    // Вычисляем целевую позицию
+    Point targetPos = brick->getPosition();
+    const Size brickSize = brick->getDimensions();
+    constexpr float COLLISION_MARGIN = 0.05f; // возможно надо будет изменитльл
+    switch (direction)
+    {
+    case 0:
+        targetPos.x -= BRICK_WIDTH;
+        break;
+    case 1:
+        targetPos.x += BRICK_WIDTH;
+        break;
+    case 2:
+        targetPos.y += BRICk_HEIGHT;
+        break;
+    case 3:
+        targetPos.y -= BRICk_HEIGHT;
+        break;
+    }
+
+    // Проверка границ карты
+    if (targetPos.x - brick->getDimensions().width / 2 < position.x ||
+        targetPos.x + brick->getDimensions().width / 2 > position.x + size.width ||
+        targetPos.y + brick->getDimensions().height / 2 > position.y ||
+        targetPos.y - brick->getDimensions().height / 2 < position.y - size.height)
+    {
+        return false;
+    }
+
+    // Проверка коллизий с ближайшими кирпичами
+    for (const auto other : bricks)
+    {
+        if (!other || other == brick)
+            continue;
+
+        const Point otherPos = other->getPosition();
+        const Size otherSize = other->getDimensions();
+
+        // Быстрая проверка расстояния (оптимизация)
+        if (std::abs(otherPos.x - targetPos.x) > (brickSize.width + otherSize.width) / 2 + COLLISION_MARGIN ||
+            std::abs(otherPos.y - targetPos.y) > (brickSize.height + otherSize.height) / 2 + COLLISION_MARGIN)
+        {
+            continue; // Объекты слишком далеко
+        }
+
+        // Точная проверка коллизии
+        bool collisionX = (targetPos.x - brickSize.width / 2 <= otherPos.x + otherSize.width / 2) &&
+                          (targetPos.x + brickSize.width / 2 >= otherPos.x - otherSize.width / 2);
+
+        bool collisionY = (targetPos.y - brickSize.height / 2 <= otherPos.y + otherSize.height / 2) &&
+                          (targetPos.y + brickSize.height / 2 >= otherPos.y - otherSize.height / 2);
+
+        if (collisionX && collisionY)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void Map::throwBall()
@@ -190,7 +304,7 @@ void Map::addBall()
     for (Ball ball : balls)
     {
         float randomValue = dist(gen);
-        extraBalls.emplace_back(ball.getPosition(), rotateVelocity(ball.getVelocity(),2* M_PI*randomValue/100), BALL_SIZE);
+        extraBalls.emplace_back(ball.getPosition(), rotateVelocity(ball.getVelocity(), 2 * M_PI * randomValue / 100), BALL_SIZE);
     }
     balls.insert(balls.end(), extraBalls.begin(), extraBalls.end());
 }
