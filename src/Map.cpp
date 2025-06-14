@@ -48,7 +48,6 @@ void Map::generateBricks()
 
 void Map::draw()
 {
-    glColor3f(0.04f, 0.1f, 0.18f); // цвет фона
     drawRectangle(position, size);
     platform.draw();
     for (Brick *brick : bricks)

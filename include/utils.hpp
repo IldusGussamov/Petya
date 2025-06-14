@@ -1,5 +1,7 @@
 #pragma once
 #include <math.h>
+#include <GL/freeglut.h>
+#include <string>
 
 enum Sides // индексация вершин прямоугольника
 {
@@ -34,27 +36,34 @@ struct Velocity
 {
     Coordinate x, y; // компоненты вектора скорости
 };
- 
-constexpr Dimension WINDOW_WIDTH = 1080;
-constexpr Dimension WINDOW_HEIGHT = 720;                                                                                               // позиция карты
-constexpr Size MAP_SIZE{1, 2};  
-constexpr Point MAP_POSITION{-0.5, 1};                                                                                                      // размеры карты
+
+extern GLuint PLATFORM_TEXTURE;           // текстура платформы
+extern const char *PLATFORM_TEXTURE_PATH; // путь к текстуре платформы
+
+extern GLuint MAP_TEXTURE; // текстура карты
+extern const char *MAP_TEXTURE_PATH; // путь к текстуре карты
+
+constexpr Dimension WINDOW_WIDTH = 600;                                                                                                // ширина окна
+constexpr Dimension WINDOW_HEIGHT = 600;                                                                                                // высота окна
+constexpr Size MAP_SIZE{1, 2};                                                                                                          // размеры карты
+constexpr Point MAP_POSITION{-0.5, 1};                                                                                                  // позиция карты (левая верхняя вершина)
 constexpr Dimension PLATFORM_ZONE = MAP_SIZE.height * 0.4;                                                                              // высота свободной области
 constexpr Dimension PLATFORM_WIDTH = 0.2;                                                                                               // ширина платформы
-constexpr Dimension PLATFORM_HEIGHT = 0.02;  
-const unsigned int ROWS = 40;
-const unsigned int COLS = 20;                                                                                                         // количество рядов и колонок платформы 
-constexpr Dimension BRICK_WIDTH = MAP_SIZE.width / COLS;
-constexpr Dimension BRICk_HEIGHT = (MAP_SIZE.height - PLATFORM_ZONE) / ROWS;                                                                                          // высота платформы
-constexpr Coordinate PLATFORM_SPEED = 0.1 * 0.35 * 0.3/10;                                                                                // скорость платформы
+constexpr Dimension PLATFORM_HEIGHT = 0.02;                                                                                             // высота платформы
+const unsigned int ROWS = 20;                                                                                                           // количество строк плиток
+const unsigned int COLS = 10;                                                                                                           // количество столбцов плиток
+constexpr Dimension BRICK_WIDTH = MAP_SIZE.width / COLS;                                                                                // ширина плитки
+constexpr Dimension BRICk_HEIGHT = (MAP_SIZE.height - PLATFORM_ZONE) / ROWS;                                                            // высота плитки
+constexpr Coordinate PLATFORM_SPEED = 1.5 * 0.1 * 0.35 * 0.3 / 3;                                                                            // скорость платформы
 constexpr Point PLATFORM_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, MAP_POSITION.y - MAP_SIZE.height + PLATFORM_ZONE / 5};        // начальная позиция платформы относительно игрового поля
 constexpr Angle MAX_BOUNCE_ANGLE = M_PI * 0.4;                                                                                          // максимальный угол отскока мяча от платформы
-constexpr Coordinate BALL_SPEED = 0.02 * 0.6/10;
-constexpr unsigned int FPS = 60*10;                                                                                           // скорость мяча
-constexpr Dimension BALL_SIZE = 0.01 * 0.9 * MAP_SIZE.height;                                                                           // диаметр мяча
+constexpr Coordinate BALL_SPEED = 1.5*0.02 * 0.6 / 3;
+const unsigned int FPS = 60;                                                                                      // скорость мяча
+constexpr unsigned int UPDATES = FPS * 3;                                                                                                   // количество кадров в секунду
+constexpr Dimension BALL_SIZE = 0.02 * 0.9 * MAP_SIZE.height;                                                                           // диаметр мяча
 constexpr Point BALL_START_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, PLATFORM_POSITION.y + PLATFORM_HEIGHT / 2 + BALL_SIZE / 2}; // начальные координаты мяча
 
-extern bool isGameOver;
+extern bool isGameOver; // флаг окончания игры
 
 // скорость мяча
 Velocity calculateBounceDirection(Velocity old_velocty, Normal normal); // вычисление вектора скорости после упругого удара
@@ -74,3 +83,9 @@ Coordinate cross(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2); //
 Velocity calculateBounceDirectonPlatform(Velocity old_velocity, Coordinate difference, Dimension PLATFORM_W = PLATFORM_WIDTH); // вычисление скорости после отскока от платформы
 
 Angle calculateAngleBetweenVectors(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2); // вычисление угла между векторами
+
+GLuint LoadTexture(const char *path); // загрузка текстуры из файла
+
+void DrawTexturedRectangle(GLuint texture, Point position, Size size); // рисование текстурированного прямоугольника
+
+void loadTextures(); // загрузка текстур

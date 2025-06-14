@@ -1,8 +1,16 @@
+#define STB_IMAGE_IMPLEMENTATION
 #include "utils.hpp"
 #include <math.h>
 #include <GL/freeglut.h>
+#include "../include/stb_image.h"
 
 bool isGameOver = false;
+
+const char *PLATFORM_TEXTURE_PATH = "assets/textures/ball.png";
+GLuint PLATFORM_TEXTURE = 0;
+
+const char *MAP_TEXTURE_PATH = "assets/textures/image.png";
+GLuint MAP_TEXTURE = 0;
 
 Velocity rotateVelocity(Velocity old_velocity, Angle angle)
 {
@@ -77,4 +85,54 @@ void drawRectangle(Point position, Size size)
     glVertex2d(position.x, position.y - size.height);
     glEnd();
     glPopMatrix();
+}
+
+GLuint LoadTexture(const char *path)
+{
+    int width, height, channels;
+    unsigned char *data = stbi_load(path, &width, &height, &channels, STBI_rgb_alpha);
+
+    if (!data)
+    {
+        return 0; // Ошибка загрузки
+    }
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    stbi_image_free(data);
+    return texture;
+}
+
+void DrawTexturedRectangle(GLuint texture, Point position, Size size)
+{
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0); glVertex2f(position.x-size.width/2, position.y+size.height/2);
+    glTexCoord2f(1, 0); glVertex2f(position.x + size.width/2, position.y+size.height/2);
+    glTexCoord2f(1, 1); glVertex2f(position.x + size.width/2, position.y - size.height/2);
+    glTexCoord2f(0, 1); glVertex2f(position.x - size.width/2, position.y - size.height/2);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
+void loadTextures()
+{
+    PLATFORM_TEXTURE = LoadTexture(PLATFORM_TEXTURE_PATH);
+    MAP_TEXTURE = LoadTexture(MAP_TEXTURE_PATH);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
