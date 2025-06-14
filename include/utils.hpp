@@ -13,6 +13,7 @@ using Coordinate = float; // тип для координат
 using Dimension = float;  // тип для размеров
 using Angle = float;      // тип для углов
 using Health = int;       // тип для здоровья
+using brickMoveCounter = int; // счетчик, для паттерна
 
 struct Size // гарабирты
 {
