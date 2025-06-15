@@ -13,9 +13,6 @@ private:
     std::vector<Brick*> bricks; // плитки
     bool isThrowBall = false;  // статус полета мяча
 
-    // // Костя - как увидишь, Ильдус, удали это коммент
-    BrickMoveCounter BMC = 0;  // Счетчик движения кирпичей
-
 public:
     Platform platform;         // платформа
 
@@ -27,10 +24,6 @@ public:
     void generateBricks();          // генерация плиток
     void addBall();
     void resetMap(); // сброс карты
-
-    // Новые методы для управления кирпичами//Костя, 2 функции
-    void moveBricksByPatterns(); // Основной метод движения кирпичей
-    bool canBrickMove(const Brick* brick, int direction) const; // Проверка возможности движения
 
     Coordinate getLeftBorder();   // получение левой границы
     Coordinate getRightBorder();  // получение правой границы

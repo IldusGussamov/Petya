@@ -7,8 +7,10 @@ protected:
     Health health;      // здоровье
     bool destroyed;     // статус жизни
     bool havePattern;   // Флаг наличия паттерна движения
-    int movePattern[4]; // Массив паттернов движения [влево, вправо, вверх, вниз]
-    int currentPattern; // Текущий шаг паттерна
+    int moveDirection;  // текущее направление движения (0: вправо, 1: влево, 2: вверх, 3: вниз)
+    float moveSpeed;    // скорость движения
+    float moveDistance; // пройденное расстояние
+    float maxDistance;  // максимальное расстояние для движения в одном направлении
 
 public:
     Brick(Point position, Dimension width, Dimension height, Health health); // конструктор
@@ -19,16 +21,9 @@ public:
 
     void takeDamage(int damage); // наненесение урона
 
-    void setMovePattern(int left, int right, int up, int down);// задавание паттерна
-    const int* getMovePattern() const;//получение массива паттерна
-    int getCurrentPattern() const;//получение направления 
-    void setCurrentPattern(int pattern);// меняет направление
-    void decrementPattern(int direction);//изменение счетчика паттерна 
-    bool hasPattern() const;// нужен для мапы, чтобы проверять паттерн для перемещения кирпичей
-
-    // Эти функции скорее всего нужно вынести в мапу
-    // bool canMove(int direction, const std::vector<Brick*>& bricks) const;
-    // void moveByPattern(const std::vector<Brick*>& bricks);
+    void setMovePattern(float speed, float distance, int initialDirection); // задание параметров движения
+    int getCurrentPattern() const;                                          // получение направления
+    bool hasPattern() const;                                                // нужен для мапы, чтобы проверять паттерн для перемещения кирпичей
 
     // Определение виртуальных методов
     void update() override;

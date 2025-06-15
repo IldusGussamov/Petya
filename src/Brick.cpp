@@ -1,25 +1,27 @@
 #include "Brick.hpp"
 
 Brick::Brick(Point position, Dimension width, Dimension height, Health health)
-    : Entity(position, {0, 0}, width, height), 
+    : Entity(position, {0, 0}, width, height),
       health(health), destroyed(false),
-      havePattern(false), currentPattern(0)
+      havePattern(false), moveDirection(0),
+      moveSpeed(0), moveDistance(0), maxDistance(0)
 {
-    // базовый паттерн задаем
-    movePattern[0] = movePattern[1] = movePattern[2] = movePattern[3] = 0;
     updateBorders();
 }
 
-Health Brick::getHealth() const {
+Health Brick::getHealth() const
+{
     return health;
 }
 
-bool Brick::isDestroyed() const {
+bool Brick::isDestroyed() const
+{
     return destroyed;
 }
 
-void Brick::takeDamage(int damage) {
-        if (!destroyed)
+void Brick::takeDamage(int damage)
+{
+    if (!destroyed)
     {
         health -= damage;
         if (health <= 0)
@@ -29,46 +31,87 @@ void Brick::takeDamage(int damage) {
         }
     }
 }
+void Brick::setMovePattern(float speed, float distance, int initialDirection)
+{
+    havePattern = (speed > 0 && distance > 0);
+    if (havePattern)
+    {
+        moveSpeed = speed;
+        maxDistance = distance;
+        moveDirection = initialDirection;
+        moveDistance = 0;
 
-void Brick::setMovePattern(int left, int right, int up, int down) {
-    // max() чтобы не было отрицательных значений
-    movePattern[0] = std::max(0, left);
-    movePattern[1] = std::max(0, right);
-    movePattern[2] = std::max(0, up);
-    movePattern[3] = std::max(0, down);
-    havePattern = (left > 0 || right > 0 || up > 0 || down > 0);
-}
-
-const int* Brick::getMovePattern() const {
-    return movePattern;
-}
-
-int Brick::getCurrentPattern() const {
-    return currentPattern;
-}
-
-void Brick::setCurrentPattern(int pattern) {
-    if (pattern >= 0 && pattern < 4) {
-        currentPattern = pattern;
+        // Устанавливаем начальную скорость в зависимости от направления
+        switch (moveDirection)
+        {
+        case 0:
+            setVelocity({moveSpeed, 0});
+            break; // вправо
+        case 1:
+            setVelocity({-moveSpeed, 0});
+            break; // влево
+        case 2:
+            setVelocity({0, moveSpeed});
+            break; // вверх
+        case 3:
+            setVelocity({0, -moveSpeed});
+            break; // вниз
+        }
     }
 }
 
-void Brick::decrementPattern(int direction) {
-    if (direction >= 0 && direction < 4) {
-        movePattern[direction] = std::max(0, movePattern[direction] - 1);
-    }
-}
-
-bool Brick::hasPattern() const {
+bool Brick::hasPattern() const
+{
     return havePattern;
 }
 
-void Brick::update() {
-    if (health <= 0) {
-        destroyed = true;
-    }
+int Brick::getCurrentPattern() const
+{
+    return moveDirection;
 }
 
-void Brick::draw() {
+void Brick::update()
+{
+    if (health <= 0)
+    {
+        destroyed = true;
+        return;
+    }
 
+    if (havePattern)
+    {
+        // Обновляем позицию
+        updatePosition();
+        moveDistance += moveSpeed;
+        updateBorders();
+
+        // Прошел ли отведенное состояние
+        if (moveDistance >= maxDistance)
+        {
+            // Смена направления
+            switch (moveDirection)
+            {
+            case 0:
+                moveDirection = 1;
+                setVelocity({-moveSpeed, 0});
+                break; // вправо -> влево
+            case 1:
+                moveDirection = 0;
+                setVelocity({moveSpeed, 0});
+                break; // влево -> вправо
+            case 2:
+                moveDirection = 3;
+                setVelocity({0, -moveSpeed});
+                break; // вверх -> вниз
+            case 3:
+                moveDirection = 2;
+                setVelocity({0, moveSpeed});
+                break; // вниз -> вверх
+            }
+            moveDistance = 0; // сброс счетчика движения
+        }
+    }
+}
+void Brick::draw()
+{
 }

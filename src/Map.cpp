@@ -86,13 +86,65 @@ void Map::update()
         }
     }
 
-    // Костя, 2 строки
-    BMC++;
-    moveBricksByPatterns();
-
     platform.update();
 
     bounceOffWalls();
+
+    // Проверка коллизий кирпичей с паттерном движения
+    for (Brick *brick : bricks)
+    {
+        if (brick->hasPattern())
+        {
+            // Проверка коллизии с границами карты
+            int currentDirection = brick->getCurrentPattern();
+            bool collisionWithMap =
+                (brick->getLeftBorder() <= getLeftBorder() && currentDirection == 1) ||   // Левая граница + движение влево
+                (brick->getRightBorder() >= getRightBorder() && currentDirection == 0) || // Правая граница + движение вправо
+                (brick->getTopBorder() >= getTopBorder() && currentDirection == 3) ||     // Верхняя граница + движение вверх
+                (brick->getBottomBorder() <= getButtomBorder() && currentDirection == 2); // Нижняя граница + движение вниз
+
+            // Проверка коллизии с другими кирпичами
+            bool collisionWithBricks = false;
+            for (Brick *otherBrick : bricks)
+            {
+                if (brick != otherBrick && brick->checkCollision(*otherBrick))
+                {
+                    collisionWithBricks = true;
+                    break;
+                }
+            }
+
+            // Если есть коллизия, меняем направление
+            if (collisionWithMap || collisionWithBricks)
+            {
+                int newDirection = (currentDirection == 0) ? 1 : (currentDirection == 1) ? 0
+                                                             : (currentDirection == 2)   ? 3
+                                                             : (currentDirection == 3)   ? 2
+                                                                                         : currentDirection;
+            }
+            if (collisionWithMap || collisionWithBricks)
+            {
+                int newDirection = currentDirection;
+                switch (currentDirection)
+                {
+                case 0:
+                    newDirection = 1;
+                    break; // Вправо -> Влево
+                case 1:
+                    newDirection = 0;
+                    break; // Влево -> Вправо
+                case 2:
+                    newDirection = 3;
+                    break; // Вверх -> Вниз
+                case 3:
+                    newDirection = 2;
+                    break; // Вниз -> Вверх
+                }
+                float speed = fabs(brick->getVelocity().x ?: brick->getVelocity().y);
+                brick->setMovePattern(speed, brick->getCurrentPattern(), newDirection);
+            }
+        }
+    }
 
     for (int i = 0; i < bricks.size();)
     {
@@ -133,116 +185,6 @@ void Map::update()
         }
         ball.update();
     }
-}
-
-// Костя, 2 функции далее
-void Map::moveBricksByPatterns()
-{
-    // Двигаем кирпичи только каждый второй кадр - надо будет решить раз в сколько
-    if (BMC % 240 != 0)
-        return;
-
-    for (auto brick : bricks)
-    {
-        if (!brick->hasPattern())
-            continue;
-
-        const auto &pattern = brick->getMovePattern();
-        int currentDir = brick->getCurrentPattern();
-
-        for (int i = 0; i < 4; ++i)
-        {
-            int dir = (currentDir + i) % 4;
-
-            if (pattern[dir] > 0 && canBrickMove(brick, dir))
-            {
-                Point newPos = brick->getPosition();
-                switch (dir)
-                {
-                case 0:
-                    newPos.x -= BRICK_WIDTH;
-                    break;
-                case 1:
-                    newPos.x += BRICK_WIDTH;
-                    break;
-                case 2:
-                    newPos.y += BRICk_HEIGHT;
-                    break;
-                case 3:
-                    newPos.y -= BRICk_HEIGHT;
-                    break;
-                }
-
-                brick->setPosition(newPos);
-                brick->decrementPattern(dir);
-                brick->setCurrentPattern((dir + 1) % 4);
-                break;
-            }
-        }
-    }
-}
-
-bool Map::canBrickMove(const Brick *brick, int direction) const
-{
-    // Вычисляем целевую позицию
-    Point targetPos = brick->getPosition();
-    const Size brickSize = brick->getDimensions();
-    constexpr float COLLISION_MARGIN = 0.05f; // возможно надо будет изменитльл
-    switch (direction)
-    {
-    case 0:
-        targetPos.x -= BRICK_WIDTH;
-        break;
-    case 1:
-        targetPos.x += BRICK_WIDTH;
-        break;
-    case 2:
-        targetPos.y += BRICk_HEIGHT;
-        break;
-    case 3:
-        targetPos.y -= BRICk_HEIGHT;
-        break;
-    }
-
-    // Проверка границ карты
-    if (targetPos.x - brick->getDimensions().width / 2 < position.x ||
-        targetPos.x + brick->getDimensions().width / 2 > position.x + size.width ||
-        targetPos.y + brick->getDimensions().height / 2 > position.y ||
-        targetPos.y - brick->getDimensions().height / 2 < position.y - size.height)
-    {
-        return false;
-    }
-
-    // Проверка коллизий с ближайшими кирпичами
-    for (const auto other : bricks)
-    {
-        if (!other || other == brick)
-            continue;
-
-        const Point otherPos = other->getPosition();
-        const Size otherSize = other->getDimensions();
-
-        // Быстрая проверка расстояния (оптимизация)
-        if (std::abs(otherPos.x - targetPos.x) > (brickSize.width + otherSize.width) / 2 + COLLISION_MARGIN ||
-            std::abs(otherPos.y - targetPos.y) > (brickSize.height + otherSize.height) / 2 + COLLISION_MARGIN)
-        {
-            continue; // Объекты слишком далеко
-        }
-
-        // Точная проверка коллизии
-        bool collisionX = (targetPos.x - brickSize.width / 2 <= otherPos.x + otherSize.width / 2) &&
-                          (targetPos.x + brickSize.width / 2 >= otherPos.x - otherSize.width / 2);
-
-        bool collisionY = (targetPos.y - brickSize.height / 2 <= otherPos.y + otherSize.height / 2) &&
-                          (targetPos.y + brickSize.height / 2 >= otherPos.y - otherSize.height / 2);
-
-        if (collisionX && collisionY)
-        {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 void Map::throwBall()
