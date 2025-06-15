@@ -2,6 +2,7 @@
 #include <GL/freeglut.h>
 #include <iostream>
 #include <chrono>
+#include "utils.hpp"
 
 std::chrono::time_point<std::chrono::steady_clock> lastFrameTime =  std::chrono::steady_clock::now(); // время последнего кадра
 
@@ -18,6 +19,8 @@ void renderScene()
     if (deltaTime >= 1000/FPS)
     {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glColor3f(1, 1, 1);
+    DrawTexturedRectangle(BACKGROUND_TEXTURE, {0, 0}, {2, 2}); // отрисовка фона
     map.draw();
 
     lastFrameTime = now;

@@ -48,7 +48,7 @@ void Map::generateBricks()
 
 void Map::draw()
 {
-    drawRectangle(position, size);
+    DrawTexturedRectangle(MAP_TEXTURE, {position.x + size.width/2, position.y - size.height/2}, size); // отрисовка карты
     platform.draw();
     for (Brick *brick : bricks)
     {
@@ -133,7 +133,7 @@ void Map::update()
 void Map::throwBall()
 {
     this->isThrowBall = true;
-    this->balls[0].setVelocity(rotateVelocity({0, BALL_SPEED}, 3.14 / 8));
+    this->balls.front().setVelocity(rotateVelocity({0, BALL_SPEED}, 3.14));
 }
 
 void Map::bounceOffWalls()

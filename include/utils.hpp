@@ -43,10 +43,13 @@ extern const char *PLATFORM_TEXTURE_PATH; // путь к текстуре пла
 extern GLuint MAP_TEXTURE; // текстура карты
 extern const char *MAP_TEXTURE_PATH; // путь к текстуре карты
 
-constexpr Dimension WINDOW_WIDTH = 600;                                                                                                // ширина окна
+extern GLuint BACKGROUND_TEXTURE; // текстура фона
+extern const char *BACKGROUND_TEXTURE_PATH; // путь к текстуре фона
+
+constexpr Dimension WINDOW_WIDTH = 800;                                                                                                // ширина окна
 constexpr Dimension WINDOW_HEIGHT = 600;                                                                                                // высота окна
-constexpr Size MAP_SIZE{1, 2};                                                                                                          // размеры карты
-constexpr Point MAP_POSITION{-0.5, 1};                                                                                                  // позиция карты (левая верхняя вершина)
+constexpr Size MAP_SIZE{1.25, 1.75};                                                                                                          // размеры карты
+constexpr Point MAP_POSITION{-(1-0.375), 0.75};                                                                                                  // позиция карты (левая верхняя вершина)
 constexpr Dimension PLATFORM_ZONE = MAP_SIZE.height * 0.4;                                                                              // высота свободной области
 constexpr Dimension PLATFORM_WIDTH = 0.2;                                                                                               // ширина платформы
 constexpr Dimension PLATFORM_HEIGHT = 0.02;                                                                                             // высота платформы
@@ -60,7 +63,7 @@ constexpr Angle MAX_BOUNCE_ANGLE = M_PI * 0.4;                                  
 constexpr Coordinate BALL_SPEED = 1.5*0.02 * 0.6 / 3;
 const unsigned int FPS = 60;                                                                                      // скорость мяча
 constexpr unsigned int UPDATES = FPS * 3;                                                                                                   // количество кадров в секунду
-constexpr Dimension BALL_SIZE = 0.02 * 0.9 * MAP_SIZE.height;                                                                           // диаметр мяча
+constexpr Dimension BALL_SIZE = 0.02 * 0.8 * MAP_SIZE.height;                                                                           // диаметр мяча
 constexpr Point BALL_START_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, PLATFORM_POSITION.y + PLATFORM_HEIGHT / 2 + BALL_SIZE / 2}; // начальные координаты мяча
 
 extern bool isGameOver; // флаг окончания игры
