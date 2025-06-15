@@ -105,23 +105,40 @@ void Map::update()
 
             // Проверка коллизии с другими кирпичами
             bool collisionWithBricks = false;
-            for (Brick *otherBrick : bricks)
+
+            if (!collisionWithMap)
             {
-                if (brick != otherBrick && brick->checkCollision(*otherBrick))
+                for (Brick *otherBrick : bricks)
                 {
-                    collisionWithBricks = true;
-                    break;
+                    if (brick == otherBrick)
+                        continue;
+
+                    // Проверяем только кирпичи, которые находятся по направлению движения
+                    bool isInDirection = false;
+                    switch (currentDirection)
+                    {
+                    case 0: // вправо
+                        isInDirection = (otherBrick->getLeftBorder() >= brick->getRightBorder());
+                        break;
+                    case 1: // влево
+                        isInDirection = (otherBrick->getRightBorder() <= brick->getLeftBorder());
+                        break;
+                    case 2: // вверх
+                        isInDirection = (otherBrick->getBottomBorder() >= brick->getTopBorder());
+                        break;
+                    case 3: // вниз
+                        isInDirection = (otherBrick->getTopBorder() <= brick->getBottomBorder());
+                        break;
+                    }
+
+                    if (isInDirection && brick->checkCollision(*otherBrick))
+                    {
+                        collisionWithBricks = true;
+                        break;
+                    }
                 }
             }
-
             // Если есть коллизия, меняем направление
-            if (collisionWithMap || collisionWithBricks)
-            {
-                int newDirection = (currentDirection == 0) ? 1 : (currentDirection == 1) ? 0
-                                                             : (currentDirection == 2)   ? 3
-                                                             : (currentDirection == 3)   ? 2
-                                                                                         : currentDirection;
-            }
             if (collisionWithMap || collisionWithBricks)
             {
                 int newDirection = currentDirection;
