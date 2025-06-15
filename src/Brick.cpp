@@ -84,9 +84,9 @@ void Brick::update()
         updatePosition();
         moveDistance += moveSpeed;
         updateBorders();
-
+        const float eps = std::min(BRICK_WIDTH, BRICk_HEIGHT) * 0.01f; // 1% от меньшего размера - погрешность для коллизии
         // Прошел ли отведенное состояние
-        if (moveDistance >= maxDistance)
+        if (moveDistance + eps >= maxDistance)
         {
             // Смена направления
             switch (moveDirection)

@@ -39,7 +39,7 @@ void Map::generateBricks()
                 bricks.push_back(new PowerfulBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
             }
             if (dist(gen) <= 3)
-                    bricks.back()->setMovePattern(0.0001, BRICK_WIDTH, dist(gen) % 4); // 10% шанс на движение
+                bricks.back()->setMovePattern(0.0001, BRICK_WIDTH, dist(gen) % 4); // 10% шанс на движение
             actualPosition.x += BRICK_WIDTH;
         }
         actualPosition.x = position.x + BRICK_WIDTH / 2;
@@ -98,47 +98,61 @@ void Map::update()
         {
             // Проверка коллизии с границами карты
             int currentDirection = brick->getCurrentPattern();
-            bool collisionWithMap =
-                (brick->getLeftBorder() <= getLeftBorder() && currentDirection == 1) ||   // Левая граница + движение влево
-                (brick->getRightBorder() >= getRightBorder() && currentDirection == 0) || // Правая граница + движение вправо
-                (brick->getTopBorder() >= getTopBorder() && currentDirection == 3) ||     // Верхняя граница + движение вверх
-                (brick->getBottomBorder() <= getButtomBorder() && currentDirection == 2); // Нижняя граница + движение вниз
+            const float eps = std::min(BRICK_WIDTH, BRICk_HEIGHT) * 0.01f; // 1% от меньшего размера - погрешность для коллизии
 
+            // Проверка коллизий с границами
+            bool collisionWithMap = false;
+            switch (currentDirection)
+            {
+            case 0: // Вправо
+                collisionWithMap = (brick->getRightBorder() + eps >= getRightBorder());
+                break;
+            case 1: // Влево
+                collisionWithMap = (brick->getLeftBorder() - eps <= getLeftBorder());
+                break;
+            case 2: // Вверх
+                collisionWithMap = (brick->getTopBorder() + eps >= getTopBorder());
+                break;
+            case 3: // Вниз
+                collisionWithMap = (brick->getBottomBorder() - eps <= (getButtomBorder() + PLATFORM_ZONE));
+                break;
+            }
             // Проверка коллизии с другими кирпичами
             bool collisionWithBricks = false;
 
             if (!collisionWithMap)
             {
-                for (Brick *otherBrick : bricks)
+            for (Brick *otherBrick : bricks)
+            {
+                if (brick == otherBrick || otherBrick->isDestroyed())
+                    continue;
+
+                // Проверяем только кирпичи в направлении движения с учетом eps
+                bool isInDirection = false;
+                switch (currentDirection)
                 {
-                    if (brick == otherBrick)
-                        continue;
+                case 0: // Вправо
+                    isInDirection = (otherBrick->getLeftBorder() >= brick->getRightBorder() - eps);
+                    break;
+                case 1: // Влево
+                    isInDirection = (otherBrick->getRightBorder() <= brick->getLeftBorder() + eps);
+                    break;
+                case 2: // Вверх
+                    isInDirection = (otherBrick->getBottomBorder() >= brick->getTopBorder() - eps);
+                    break;
+                case 3: // Вниз
+                    isInDirection = (otherBrick->getTopBorder() <= brick->getBottomBorder() + eps);
+                    break;
+                }
 
-                    // Проверяем только кирпичи, которые находятся по направлению движения
-                    bool isInDirection = false;
-                    switch (currentDirection)
-                    {
-                    case 0: // вправо
-                        isInDirection = (otherBrick->getLeftBorder() >= brick->getRightBorder());
-                        break;
-                    case 1: // влево
-                        isInDirection = (otherBrick->getRightBorder() <= brick->getLeftBorder());
-                        break;
-                    case 2: // вверх
-                        isInDirection = (otherBrick->getBottomBorder() >= brick->getTopBorder());
-                        break;
-                    case 3: // вниз
-                        isInDirection = (otherBrick->getTopBorder() <= brick->getBottomBorder());
-                        break;
-                    }
-
-                    if (isInDirection && brick->checkCollision(*otherBrick))
-                    {
-                        collisionWithBricks = true;
-                        break;
-                    }
+                if (isInDirection && brick->checkCollision(*otherBrick))
+                {
+                    collisionWithBricks = true;
+                    break;
                 }
             }
+            }
+
             // Если есть коллизия, меняем направление
             if (collisionWithMap || collisionWithBricks)
             {
@@ -159,7 +173,7 @@ void Map::update()
                     break; // Вниз -> Вверх
                 }
                 float speed = fabs(brick->getVelocity().x ?: brick->getVelocity().y);
-                brick->setMovePattern(speed, brick->getCurrentPattern(), newDirection);
+                brick->setMovePattern(speed, BRICK_WIDTH, newDirection);
             }
         }
         brick->update();
