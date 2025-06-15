@@ -38,7 +38,8 @@ void Map::generateBricks()
             {
                 bricks.push_back(new PowerfulBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
             }
-
+            if (dist(gen) <= 3)
+                    bricks.back()->setMovePattern(0.0001, BRICK_WIDTH, dist(gen) % 4); // 10% шанс на движение
             actualPosition.x += BRICK_WIDTH;
         }
         actualPosition.x = position.x + BRICK_WIDTH / 2;
@@ -161,6 +162,7 @@ void Map::update()
                 brick->setMovePattern(speed, brick->getCurrentPattern(), newDirection);
             }
         }
+        brick->update();
     }
 
     for (int i = 0; i < bricks.size();)
