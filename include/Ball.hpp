@@ -9,6 +9,6 @@ public:
     Ball(Point position, Velocity velocity, Dimension size);
     void draw() override;
     void update() override;
-    void Collision(const Platform &platform);
+    bool Collision(const Platform &platform);
     bool Collision(const Brick &brick);
 };

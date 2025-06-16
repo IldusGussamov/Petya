@@ -19,6 +19,7 @@ void keyboardDown(unsigned char K, int x, int y)
     switch (K)
     {
     case 'r':
+    case 'R':
     {
         map.resetMap();
         break;
@@ -35,24 +36,31 @@ void keyboardDown(unsigned char K, int x, int y)
         break;
     }
     case 'a':
+    case 'A':
     {
         PRESSED_KEY_A = true;
         break;
     }
     case 'd':
+    case 'D':
     {
         PRESSED_KEY_D = true;
         break;
     }
-    case 'h':
+        if (!map.isBallThrown())
+            return;
+    case 'q':
+    case 'Q':
     {
-        map.addBall();
+        map.rotateLeftdirectionThrowBall();
         break;
     }
-        {
-            map.addBall();
-            break;
-        }
+    case 'e':
+    case 'E':
+    {
+        map.rotateRightdirectionThrowBall();
+        break;
+    }
     }
 }
 

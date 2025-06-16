@@ -14,17 +14,19 @@ void Ball::draw()
 }
 void Ball::update()
 {
-    this->position.x += this->velocity.x;
-    this->position.y += this->velocity.y;
+    this->position.x += this->velocity.x * speedMultiplier;
+    this->position.y += this->velocity.y * speedMultiplier;
     updateBorders();
 }
 
-void Ball::Collision(const Platform &platform)
+bool Ball::Collision(const Platform &platform)
 {
     if (this->checkCollision(platform))
     {
         this->setVelocity(calculateBounceDirectonPlatform(this->getVelocity(), platform.getPosition().x - this->position.x));
+        return true;
     }
+    return false;
 }
 
 bool Ball::Collision(const Brick &brick)

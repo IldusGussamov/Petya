@@ -15,8 +15,8 @@ Platform::Platform(Point position, Velocity velocity) : Entity(position, velocit
  }
 void Platform::update()
 {
-    position.x += velocity.x;
-    position.y += velocity.y;
+    position.x += velocity.x * speedMultiplier;
+    position.y += velocity.y * speedMultiplier;
     updateBorders();
 }
 

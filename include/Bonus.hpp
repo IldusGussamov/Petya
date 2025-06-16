@@ -5,8 +5,12 @@
 class Bonus : public Entity
 {
 public:
-    Bonus(Point position, Velocity velocity);
+    Bonus(Point position, Dimension width, Dimension height);
     void draw() override;
     void update() override;
     void Collision(const Platform &platform);
+    int getBonusType() const; // получение типа бонуса
+     bool isHit = false;
+    protected:
+    int bonusType = 0;
 };

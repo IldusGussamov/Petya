@@ -3,9 +3,8 @@
 #include <GL/freeglut.h>
 #include <cmath>
 #include "utils.hpp"
-
-Rocket::Rocket(Point position, Velocity velocity, Dimension width, Dimension height)
-    : Entity(position, velocity, width, height), targeting(true) {
+Rocket::Rocket(Point position, Dimension width, Dimension height)
+    : Entity(position, ROCKET_SPEED, width, height), targeting(true) {
         boomStatus = false;
     }
 
@@ -30,8 +29,8 @@ void Rocket::update()
         float dist = getNorm(dx,dy);
         if (position.y >= MAP_POSITION.y - MAP_SIZE.height + PLATFORM_ZONE)
         {
-            velocity.x = getNorm(velocity.x, velocity.y) * dx/dist;
-            velocity.y = getNorm(velocity.x, velocity.y) * dy/dist;
+            velocity.x = getNorm(ROCKET_SPEED.x, ROCKET_SPEED.y) * dx/dist;
+            velocity.y = getNorm(ROCKET_SPEED.x, ROCKET_SPEED.y) * dy/dist;
         }
         else
         {
@@ -40,6 +39,15 @@ void Rocket::update()
     }
     updatePosition();
     updateBorders();
+}
+
+void Rocket::Collision(const Platform &platform)
+{
+    if (this->checkCollision(platform))
+    {
+        const_cast<Platform&>(platform).hit(); //снятие константности для нанесения урона платформе
+        isHit = true; // флаг указывающий на попадание ракеты в платформу
+    }
 }
 
 void Rocket::draw()

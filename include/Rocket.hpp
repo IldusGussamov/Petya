@@ -5,7 +5,7 @@
 class Rocket : public Entity
 {
 public:
-    Rocket(Point position, Velocity velocity, Dimension width, Dimension height);
+    Rocket(Point position, Dimension width, Dimension height);
     void setTarget(const Platform &platform);
     void launchStraight();
     void update() override;
@@ -13,8 +13,14 @@ public:
     bool isBoom();
     void Boom();
 
+    void Collision(const Platform &platform);
+
 private:
     bool targeting;
     Point targetPosition;
+
     bool boomStatus;
+
+protected:
+    bool isHit = false; // флаг, указывающий на то, что ракета попала в платформу
 };

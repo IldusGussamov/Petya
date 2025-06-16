@@ -41,9 +41,12 @@ constexpr Size MAP_SIZE{1, 2};
 constexpr Point MAP_POSITION{-0.5, 1};                                                                                                      // размеры карты
 constexpr Dimension PLATFORM_ZONE = MAP_SIZE.height * 0.4;                                                                              // высота свободной области
 constexpr Dimension PLATFORM_WIDTH = 0.2;                                                                                               // ширина платформы
-constexpr Dimension PLATFORM_HEIGHT = 0.02;  
+constexpr Dimension PLATFORM_HEIGHT = 0.02; 
+constexpr Dimension BONUS_WIDTH = 0.25 * PLATFORM_WIDTH;                                                                 // ширина бонуса
+constexpr Dimension BONUS_HEIGHT = 0.25 * PLATFORM_WIDTH;                                                                 // высота бонуса 
 const unsigned int ROWS = 40;
-const unsigned int COLS = 20;                                                                                                         // количество рядов и колонок платформы 
+const unsigned int COLS = 20;    
+constexpr Angle ANGLE_THROW_BALL = 0;                                                                                                     // количество рядов и колонок платформы 
 constexpr Dimension BRICK_WIDTH = MAP_SIZE.width / COLS;
 constexpr Dimension BRICk_HEIGHT = (MAP_SIZE.height - PLATFORM_ZONE) / ROWS;                                                                                          // высота платформы
 constexpr Coordinate PLATFORM_SPEED = 0.1 * 0.35 * 0.3/10;                                                                                // скорость платформы
@@ -52,11 +55,11 @@ constexpr Angle MAX_BOUNCE_ANGLE = M_PI * 0.4;                                  
 constexpr Coordinate BALL_SPEED = 0.02 * 0.6/10;
 constexpr unsigned int FPS = 60*10;                                                                                           // скорость мяча
 constexpr Dimension BALL_SIZE = 0.01 * 0.9 * MAP_SIZE.height;                                                                           // диаметр мяча
-constexpr Point BALL_START_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, PLATFORM_POSITION.y + PLATFORM_HEIGHT / 2 + BALL_SIZE / 2}; // начальные координаты мяча
+constexpr Point BALL_START_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, PLATFORM_POSITION.y + PLATFORM_HEIGHT / 2 + BALL_SIZE / 2 + PLATFORM_HEIGHT*0.1}; // начальные координаты мяча
 constexpr Dimension ROCKET_WIDTH = (MAP_SIZE.height - PLATFORM_ZONE) / ROWS;  
 constexpr Dimension ROCKET_HEIGHT = MAP_SIZE.width / COLS;  
-constexpr Velocity ROCKET_SPEED = {0, -BALL_SPEED * 0.3};                                                                                     // скорость ракеты
-
+constexpr Velocity ROCKET_SPEED = {0, -BALL_SPEED * 0.9};  
+constexpr Coordinate DROP_SPEED = BALL_SPEED*0.7; // скорость падения бонусов
 extern bool isGameOver;
 
 // скорость мяча
