@@ -19,6 +19,10 @@ add_executable(arkanoid
     src/PowerfulBrick.cpp
     src/SimpleBrick.cpp
     src/SeriousBrick.cpp
+    src/CombatBrick.cpp
+    src/MagicBrick.cpp
+    src/Bonus.cpp
+    src/Rocket.cpp
     )
 
 target_include_directories(arkanoid PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -29,6 +33,6 @@ target_link_libraries(arkanoid
         ${GLUT_LIBRARIES}
 )
 
-if (WIN32)
-    set_target_properties(arkanoid PROPERTIES WIN32_EXECUTABLE TRUE)
-endif()
+# if (WIN32)
+#     set_target_properties(arkanoid PROPERTIES WIN32_EXECUTABLE TRUE)
+# endif()
