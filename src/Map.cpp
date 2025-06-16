@@ -3,6 +3,8 @@
 #include "PowerfulBrick.hpp"
 #include "SimpleBrick.hpp"
 #include "SeriousBrick.hpp"
+#include "CombatBrick.hpp"
+#include "Rocket.hpp"
 #include <GL/freeglut.h>
 #include <iostream>
 #include <random>
@@ -36,7 +38,7 @@ void Map::generateBricks()
 
             if (randomValue >= 85)
             {
-                bricks.push_back(new PowerfulBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
+                bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, CombatBrick::Powerful));
             }
 
             actualPosition.x += BRICK_WIDTH;
@@ -129,6 +131,16 @@ void Map::update()
         }
         ball.update();
     }
+
+    for (int i = 0; i < rockets.size();)
+    {
+        rockets[i].update();
+        if (rockets[i].getBottomBorder() <= this->getButtomBorder()) {
+            rockets.erase(rockets.begin() + i);
+        } else {
+            ++i;
+        }
+    }
 }
 
 void Map::throwBall()
@@ -190,7 +202,7 @@ void Map::addBall()
     for (Ball ball : balls)
     {
         float randomValue = dist(gen);
-        extraBalls.emplace_back(ball.getPosition(), rotateVelocity(ball.getVelocity(),2* M_PI*randomValue/100), BALL_SIZE);
+        extraBalls.emplace_back(ball.getPosition(), rotateVelocity(ball.getVelocity(), 2 * M_PI * randomValue / 100), BALL_SIZE);
     }
     balls.insert(balls.end(), extraBalls.begin(), extraBalls.end());
 }
@@ -208,3 +220,12 @@ void Map::resetMap()
     bricks.clear();
     generateBricks();
 }
+
+void Map::addRocket(Poinst position) {
+    rockets.push_back(rocket);
+}
+
+// void Map::addRocket(Point position) 
+// {
+
+// }

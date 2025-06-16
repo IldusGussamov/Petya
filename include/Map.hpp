@@ -2,6 +2,7 @@
 #include "Platform.hpp"
 #include "Ball.hpp"
 #include "Brick.hpp"
+#include "Rocket.hpp"
 #include <vector>
 
 class Map
@@ -11,6 +12,7 @@ private:
     Size size;                 // размер карты (Ox вправо, а Oy вниз)
     std::vector<Ball> balls;   // мячи
     std::vector<Brick*> bricks; // плитки
+    std::vector<Rocket*> rockets; // Хранение ракет на карте
     bool isThrowBall = false;  // статус полета мяча
 
 public:
@@ -23,6 +25,7 @@ public:
     void bounceOffWalls();          // проверка столкновения о стену и отскок мяча
     void generateBricks();          // генерация плиток
     void addBall();
+    void addRocket(); // добавить ракету на карту
     void resetMap(); // сброс карты
 
     Coordinate getLeftBorder();   // получение левой границы

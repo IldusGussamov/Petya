@@ -19,6 +19,10 @@ add_executable(arkanoid
     src/PowerfulBrick.cpp
     src/SimpleBrick.cpp
     src/SeriousBrick.cpp
+    src/CombatBrick.cpp
+    src/MagicBrick.cpp
+    src/Bonus.cpp
+    src/Rocket.cpp
     )
 
 target_include_directories(arkanoid PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
