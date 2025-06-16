@@ -38,7 +38,7 @@ void Map::generateBricks()
 
             if (randomValue >= 95)
             {
-                combatBricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, CombatBrick::Powerful));
+                bricks.push_back(new PowerfulBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
             }
 
             actualPosition.x += BRICK_WIDTH;
@@ -260,8 +260,3 @@ void Map::resetMap()
     bricks.clear();
     generateBricks();
 }
-
-// void Map::addRocket(Point position) 
-// {
-
-// }
