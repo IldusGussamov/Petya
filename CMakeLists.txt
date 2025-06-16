@@ -33,6 +33,6 @@ target_link_libraries(arkanoid
         ${GLUT_LIBRARIES}
 )
 
-if (WIN32)
-    set_target_properties(arkanoid PROPERTIES WIN32_EXECUTABLE TRUE)
-endif()
+# if (WIN32)
+#     set_target_properties(arkanoid PROPERTIES WIN32_EXECUTABLE TRUE)
+# endif()

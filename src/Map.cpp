@@ -31,14 +31,14 @@ void Map::generateBricks()
             {
                 bricks.push_back(new SimpleBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
             }
-            if (randomValue >= 75 and randomValue < 85)
+            if (randomValue >= 75 and randomValue < 95)
             {
                 bricks.push_back(new SeriousBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
             }
 
-            if (randomValue >= 85)
+            if (randomValue >= 95)
             {
-                bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, CombatBrick::Powerful));
+                combatBricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, CombatBrick::Powerful));
             }
 
             actualPosition.x += BRICK_WIDTH;
@@ -60,6 +60,14 @@ void Map::draw()
     for (Ball &ball : balls)
     {
         ball.draw();
+    }
+     for (Brick *brick : combatBricks)
+    {
+        brick->draw();
+    }
+    for(Rocket *rocket : rockets)
+    {
+        rocket->draw();
     }
 }
 
@@ -105,6 +113,19 @@ void Map::update()
         }
     }
 
+    for (int i = 0; i < combatBricks.size();)
+    {
+        if (!combatBricks[i]->getHealth())
+        {
+            delete combatBricks[i];
+            combatBricks.erase(combatBricks.begin() + i);
+        }
+        else
+        {
+            ++i;
+        }
+    }
+
     for (Ball &ball : balls)
     {
         if (!this->isThrowBall)
@@ -129,13 +150,32 @@ void Map::update()
                 }
             }
         }
+
+        for(CombatBrick *brick : combatBricks)
+        {
+            bool flag = false;
+            Velocity old_vel = ball.getVelocity();
+                flag = (ball.Collision(*brick));
+                Velocity new_vel = ball.getVelocity();
+                if (old_vel.x != new_vel.x || old_vel.y != new_vel.y)
+                    brick->takeDamage(1);
+                if (flag)
+                {
+                    flag = false;
+                    break;
+                }
+            if (!brick->getHealth())
+                rockets.push_back(new Rocket(brick->getPosition(), ROCKET_SPEED, ROCKET_WIDTH, ROCKET_HEIGHT));
+        }
+
         ball.update();
     }
 
     for (int i = 0; i < rockets.size();)
     {
-        rockets[i].update();
-        if (rockets[i].getBottomBorder() <= this->getButtomBorder()) {
+        rockets[i]->setTarget(platform);
+        rockets[i]->update();
+        if (rockets[i]->getBottomBorder() <= this->getButtomBorder()) {
             rockets.erase(rockets.begin() + i);
         } else {
             ++i;
@@ -219,10 +259,6 @@ void Map::resetMap()
     }
     bricks.clear();
     generateBricks();
-}
-
-void Map::addRocket(Poinst position) {
-    rockets.push_back(rocket);
 }
 
 // void Map::addRocket(Point position) 

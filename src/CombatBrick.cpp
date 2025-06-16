@@ -11,6 +11,7 @@ void CombatBrick::draw()
 {
     if (isDestroyed())
     {
+
         return;
     }
     glColor3f(1.0f, 0.0f, 0.0f); // Всегда красный

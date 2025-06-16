@@ -8,7 +8,6 @@ int main(int argc, char **argv)
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
     glutCreateWindow("Petya");
-    glutFullScreen();
 
     glutDisplayFunc(renderScene);
     glutKeyboardFunc(keyboardDown);

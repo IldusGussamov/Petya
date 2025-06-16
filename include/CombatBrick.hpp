@@ -1,5 +1,6 @@
 #pragma once
 #include "Brick.hpp"
+#include <vector>
 
 class CombatBrick : public Brick
 {

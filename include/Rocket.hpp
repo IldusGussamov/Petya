@@ -14,5 +14,4 @@ public:
 private:
     bool targeting;
     Point targetPosition;
-    float speed = 5.0f;
 };

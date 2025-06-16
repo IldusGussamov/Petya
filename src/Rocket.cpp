@@ -2,6 +2,7 @@
 #include "Platform.hpp"
 #include <GL/freeglut.h>
 #include <cmath>
+#include "utils.hpp"
 
 Rocket::Rocket(Point position, Velocity velocity, Dimension width, Dimension height)
     : Entity(position, velocity, width, height), targeting(true) {}
@@ -24,25 +25,18 @@ void Rocket::update()
         // Движение к платформе
         float dx = targetPosition.x - position.x;
         float dy = targetPosition.y - position.y;
-        float dist = std::sqrt(dx * dx + dy * dy);
-        if (dist > 1.0f)
+        float dist = getNorm(dx,dy);
+        if (dist > 0.5f)
         {
-            velocity.x = dx / dist * speed;
-            velocity.y = dy / dist * speed;
-            position.x += velocity.x;
-            position.y += velocity.y;
+            velocity.x = getNorm(velocity.x, velocity.y) * dx/dist;
+            velocity.y = getNorm(velocity.x, velocity.y) * dy/dist;
         }
         else
         {
             launchStraight();
         }
     }
-    else
-    {
-        // Летит по прямой
-        position.x += velocity.x;
-        position.y += velocity.y;
-    }
+    updatePosition();
     updateBorders();
 }
 
