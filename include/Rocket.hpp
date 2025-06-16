@@ -10,8 +10,11 @@ public:
     void launchStraight();
     void update() override;
     void draw() override;
+    void Collision(const Platform &platform);
 
 private:
     bool targeting;
     Point targetPosition;
+protected:
+    bool isHit = false; // флаг, указывающий на то, что ракета попала в платформу
 };

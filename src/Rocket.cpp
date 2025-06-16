@@ -40,6 +40,15 @@ void Rocket::update()
     updateBorders();
 }
 
+void Rocket::Collision(const Platform &platform)
+{
+    if (this->checkCollision(platform))
+    {
+        const_cast<Platform&>(platform).hit(); //снятие константности для нанесения урона платформе
+        isHit = true; // флаг указывающий на попадание ракеты в платформу
+    }
+}
+
 void Rocket::draw()
 {
     glColor3f(1, 0.2, 0.2);
