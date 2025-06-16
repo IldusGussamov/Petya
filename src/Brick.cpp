@@ -18,11 +18,6 @@ bool Brick::isDestroyed() const
     return destroyed;
 }
 
-bool Brick::isActioned() const
-{
-    return actioned;
-}
-
 void Brick::takeDamage(int damage)
 {
     if (!destroyed)

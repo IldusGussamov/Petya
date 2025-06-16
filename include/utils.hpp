@@ -55,7 +55,7 @@ constexpr Dimension BALL_SIZE = 0.01 * 0.9 * MAP_SIZE.height;                   
 constexpr Point BALL_START_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, PLATFORM_POSITION.y + PLATFORM_HEIGHT / 2 + BALL_SIZE / 2}; // начальные координаты мяча
 constexpr Dimension ROCKET_WIDTH = (MAP_SIZE.height - PLATFORM_ZONE) / ROWS;  
 constexpr Dimension ROCKET_HEIGHT = MAP_SIZE.width / COLS;  
-constexpr Velocity ROCKET_SPEED = {0, -BALL_SPEED * 0.7};                                                                                     // скорость ракеты
+constexpr Velocity ROCKET_SPEED = {0, -BALL_SPEED * 0.3};                                                                                     // скорость ракеты
 
 extern bool isGameOver;
 

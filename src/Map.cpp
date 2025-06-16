@@ -38,7 +38,7 @@ void Map::generateBricks()
 
             if (randomValue >= 95)
             {
-                combatBricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, CombatBrick::Powerful));
+                combatBricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, CombatBrick::Simple));
             }
 
             actualPosition.x += BRICK_WIDTH;
@@ -61,124 +61,118 @@ void Map::draw()
     {
         ball.draw();
     }
-     for (Brick *brick : combatBricks)
+    for (Brick *brick : combatBricks)
     {
         brick->draw();
     }
-    for(Rocket *rocket : rockets)
+    for (Rocket *rocket : rockets)
     {
         rocket->draw();
     }
 }
 
-void Map::update()
-{
-    if (isGameOver)
-        return;
+void Map::update() {
+    if (isGameOver) return;
 
-    if (bricks.size() == 0)
-    {
+    // Проверка условий завершения игры
+    if (bricks.empty() && combatBricks.empty()) {
         isGameOver = true;
         return;
     }
 
-    if (!balls.size())
-    {
+    if (platform.getHealth() <= 0) {
+        isGameOver = true;
+        return;
+    }
+
+    // Если шаров нет, перезапускаем шар (если платформа жива)
+    if (balls.empty()) {
         platform.hit();
-        this->isThrowBall = false;
+        isThrowBall = false;
         platform.setPosition(PLATFORM_POSITION);
-        if (platform.getHealth())
-            this->balls.emplace_back(BALL_START_POSITION, platform.getVelocity(), BALL_SIZE);
-        else
-        {
-            isGameOver = true; // если платформа уничтожена, то игра окончена
+
+        if (platform.getHealth() > 0) {
+            balls.emplace_back(BALL_START_POSITION, platform.getVelocity(), BALL_SIZE);
+        } else {
+            isGameOver = true;
             return;
         }
     }
 
+    // Обновление платформы и проверка отскока от стен
     platform.update();
-
     bounceOffWalls();
 
-    for (int i = 0; i < bricks.size();)
-    {
-        if (!bricks[i]->getHealth())
-        {
-            delete bricks[i];
-            bricks.erase(bricks.begin() + i);
-        }
-        else
-        {
-            ++i;
+    // Удаление разрушенных обычных кирпичей
+    for (auto it = bricks.begin(); it != bricks.end(); ) {
+        if ((*it)->getHealth() <= 0) {
+            delete *it;
+            it = bricks.erase(it);
+        } else {
+            ++it;
         }
     }
 
-    for (int i = 0; i < combatBricks.size();)
-    {
-        if (!combatBricks[i]->getHealth())
-        {
-            delete combatBricks[i];
-            combatBricks.erase(combatBricks.begin() + i);
-        }
-        else
-        {
-            ++i;
-        }
-    }
-
-    for (Ball &ball : balls)
-    {
-        if (!this->isThrowBall)
-        {
+    // Обновление шаров и проверка столкновени
+    for (Ball &ball : balls) {
+        if (!isThrowBall) {
             ball.setVelocity(platform.getVelocity());
-        }
-        else
-        {
+        } else {
+            // Столкновение с платформой
             ball.Collision(platform);
-            bool flag = false;
-            for (Brick *brick : bricks)
-            {
-                Velocity old_vel = ball.getVelocity();
-                flag = (ball.Collision(*brick));
-                Velocity new_vel = ball.getVelocity();
-                if (old_vel.x != new_vel.x || old_vel.y != new_vel.y)
-                    brick->takeDamage(1);
-                if (flag)
-                {
-                    flag = false;
-                    break;
-                }
-            }
-        }
 
-        for(CombatBrick *brick : combatBricks)
-        {
-            bool flag = false;
-            Velocity old_vel = ball.getVelocity();
-                flag = (ball.Collision(*brick));
-                Velocity new_vel = ball.getVelocity();
-                if (old_vel.x != new_vel.x || old_vel.y != new_vel.y)
+            // Столкновение с обычными кирпичами
+            for (Brick *brick : bricks) {
+                Velocity oldVel = ball.getVelocity();
+                bool collided = ball.Collision(*brick);
+                Velocity newVel = ball.getVelocity();
+
+                if (oldVel.x != newVel.x || oldVel.y != newVel.y) {
                     brick->takeDamage(1);
-                if (flag)
-                {
-                    flag = false;
-                    break;
                 }
-            if (!brick->getHealth())
-                rockets.push_back(new Rocket(brick->getPosition(), ROCKET_SPEED, ROCKET_WIDTH, ROCKET_HEIGHT));
+                if (collided) break; // Прерываем после первого столкновения
+            }
+
+            // Столкновение с боевыми кирпичами
+            for (CombatBrick *brick : combatBricks) {
+                Velocity oldVel = ball.getVelocity();
+                bool collided = ball.Collision(*brick);
+                Velocity newVel = ball.getVelocity();
+
+                if (oldVel.x != newVel.x || oldVel.y != newVel.y) {
+                    brick->takeDamage(1);
+                    rockets.push_back(new Rocket(brick->getPosition(), ROCKET_SPEED, ROCKET_WIDTH, ROCKET_HEIGHT));
+                }
+                if (collided) break; // Прерываем после первого столкновения
+
+                // Если боевой кирпич разрушен, создаем ракету
+            }
         }
 
         ball.update();
     }
 
-    for (int i = 0; i < rockets.size();)
-    {
-        rockets[i]->setTarget(platform);
-        rockets[i]->update();
-        if (rockets[i]->getBottomBorder() <= this->getButtomBorder()) {
-            rockets.erase(rockets.begin() + i);
+
+    // Обновление и проверка ракет
+    for (int i = 0; i < rockets.size(); ) {
+    rockets[i]->update();
+    rockets[i]->setTarget(platform);
+    if (rockets[i]->checkCollision(platform)) {
+        platform.hit();
+        delete rockets[i]; // Удаляем СРАЗУ
+        rockets.erase(rockets.begin() + i);
+        continue; // Переходим к следующей ракете
+    }
+    ++i;
+}
+
+    // Удаление разрушенных боевых кирпичей
+    for (auto it = combatBricks.begin(); it != combatBricks.end(); ) {
+        if ((*it)->getHealth() <= 0) {
+            delete *it;
+            it = combatBricks.erase(it);
         } else {
-            ++i;
+            ++it;
         }
     }
 }
@@ -247,21 +241,34 @@ void Map::addBall()
     balls.insert(balls.end(), extraBalls.begin(), extraBalls.end());
 }
 
-void Map::resetMap()
-{
+void Map::resetMap() {
     isGameOver = false;
-    platform = Platform(PLATFORM_POSITION, {0, 0});
-    balls.clear();
-    isThrowBall = false;
-    for (Brick *brick : bricks)
-    {
-        delete brick;
+    platform = Platform(PLATFORM_POSITION, {0, 0}); // Сброс платформы
+    balls.clear(); // Очистка шаров (если хранит объекты)
+    isThrowBall = false; // Мяч привязан к платформе
+
+    // Удаление обычных кирпичей
+    for (Brick* brick : bricks) {
+        if (brick) delete brick;
     }
     bricks.clear();
-    generateBricks();
+
+    // Удаление боевых кирпичей
+    for (CombatBrick* brick : combatBricks) {
+        if (brick) delete brick;
+    }
+    combatBricks.clear();
+
+    // Удаление ракет (если вектор хранит указатели)
+    for (Rocket* rocket : rockets) {
+        if (rocket) delete rocket;
+    }
+    rockets.clear();
+
+    generateBricks(); // Генерация новой карты
 }
 
-// void Map::addRocket(Point position) 
+// void Map::addRocket(Point position)
 // {
 
 // }

@@ -10,8 +10,11 @@ public:
     void launchStraight();
     void update() override;
     void draw() override;
+    bool isBoom();
+    void Boom();
 
 private:
     bool targeting;
     Point targetPosition;
+    bool boomStatus;
 };
