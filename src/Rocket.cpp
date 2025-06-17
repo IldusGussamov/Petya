@@ -52,8 +52,7 @@ void Rocket::Collision(const Platform &platform)
 
 void Rocket::draw()
 {
-    glColor3f(1, 0.2, 0.2);
-    drawBorderRectangle(borders);
+    DrawTexturedRectangle(ROCKET_TEXTURE, this->position, size);
 }
 
 bool Rocket::isBoom()

@@ -67,7 +67,7 @@ const char *ROCKET_TEXTURE_PATH = "assets/textures/rocket.png"; //asd
 GLuint ROCKET_TEXTURE = 0; 
 
 const char *PLATFORM_0_TEXTURE_PATH = "assets/textures/platform0.png"; //asd
-GLuint PLATFORM_TEXTURE = 0; 
+GLuint PLATFORM_0_TEXTURE = 0; 
 
 const char *PLATFORM_1_TEXTURE_PATH = "assets/textures/platform1.png"; //asd
 GLuint PLATFORM_1_TEXTURE = 0; 
@@ -217,6 +217,7 @@ void loadTextures()
     BONUS_SMALL_TEXTURE = LoadTexture(BONUS_SMALL_TEXTURE_PATH);
     BONUS_SWAP_TEXTURE = LoadTexture(BONUS_SWAP_TEXTURE_PATH);
     ROCKET_TEXTURE = LoadTexture(ROCKET_TEXTURE_PATH);
+    PLATFORM_0_TEXTURE = LoadTexture(PLATFORM_1_TEXTURE_PATH);
     PLATFORM_1_TEXTURE = LoadTexture(PLATFORM_1_TEXTURE_PATH);
     PLATFORM_2_TEXTURE = LoadTexture(PLATFORM_2_TEXTURE_PATH);
     PLATFORM_3_TEXTURE = LoadTexture(PLATFORM_3_TEXTURE_PATH);

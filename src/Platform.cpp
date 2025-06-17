@@ -10,8 +10,12 @@ Platform::Platform(Point position, Velocity velocity) : Entity(position, velocit
 
  void Platform::draw()
  {
-    glColor3f(1, 1, 1);
-    DrawTexturedRectangle(PLATFORM_1_TEXTURE, position, size);
+    switch (getHealth()) {
+        case 3: DrawTexturedRectangle(PLATFORM_3_TEXTURE, this->position, size); break;
+        case 2: DrawTexturedRectangle(PLATFORM_2_TEXTURE, this->position, size); break;
+        case 1: DrawTexturedRectangle(PLATFORM_1_TEXTURE, this->position, size); break;
+        case 0: DrawTexturedRectangle(PLATFORM_0_TEXTURE, this->position, size); break;
+    }
  }
 void Platform::update()
 {

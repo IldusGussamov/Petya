@@ -98,7 +98,7 @@ extern const char *ROCKET_TEXTURE_PATH; // путь к текстуре раке
 extern GLuint ROCKET_TEXTURE; 
 
 extern const char *PLATFORM_0_TEXTURE_PATH; // путь к текстуре платформы 0
-extern GLuint PLATFORM_TEXTURE; 
+extern GLuint PLATFORM_0_TEXTURE; 
 
 extern const char *PLATFORM_1_TEXTURE_PATH;    // путь к текстуре платформы 1
 extern GLuint PLATFORM_1_TEXTURE; 

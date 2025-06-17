@@ -43,13 +43,13 @@ int main(int argc, char **argv)
 
     glutDisplayFunc(renderScene);
     glutKeyboardFunc(keyboardDown);
-    glutTimerFunc(1000 / UPDATES, timerFunc, 0);
+    glutTimerFunc(500 / UPDATES, timerFunc, 0);
     glutKeyboardUpFunc(keyboardUp);
     glutMainLoop();
     return 0;
 }
 
-// main.cpp
+// main.cpp7
 // #include <GL/freeglut.h>
 // #include "utils.hpp"
 
