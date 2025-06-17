@@ -289,6 +289,15 @@ void Map::update()
                 isThrowCapture = false;
             }
 
+            // if (bonuses[i].getBonusType() == 9 && isThrowCapture) // Щит платформы
+            // {
+                // some code ..
+            // }
+            {
+                isActivateStickingBonus = true;
+                isThrowCapture = false;
+            }
+
             bonuses.erase(bonuses.begin() + i);
             i--; // Уменьшаем индекс, чтобы не пропустить следующий бонус
         }

@@ -63,6 +63,12 @@ GLuint BONUS_SMALL_TEXTURE = 0;
 const char *BONUS_SWAP_TEXTURE_PATH = "assets/textures/bonusSwap.png"; 
 GLuint BONUS_SWAP_TEXTURE = 0; 
 
+const char *BONUS_SPEED_TEXTURE_PATH = "assets/textures/bonusSwap.png"; 
+GLuint BONUS_SPEED_TEXTURE = 0; 
+
+const char *BONUS_BALL_SPEED_TEXTURE_PATH = "assets/textures/bonusSwap.png"; 
+GLuint BONUS_BALL_SPEED_TEXTURE = 0; 
+
 const char *ROCKET_TEXTURE_PATH = "assets/textures/rocket.png"; //asd
 GLuint ROCKET_TEXTURE = 0; 
 
