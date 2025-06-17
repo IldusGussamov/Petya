@@ -5,6 +5,7 @@
 
 Ball::Ball(Point position, Velocity velocity, Dimension size) : Entity(position, velocity, size, size)
 {
+    isStick = false;
 }
 
 void Ball::draw()
@@ -23,7 +24,7 @@ bool Ball::Collision(const Platform &platform)
 {
     if (this->checkCollision(platform))
     {
-        this->setVelocity(calculateBounceDirectonPlatform(this->getVelocity(), platform.getPosition().x - this->position.x));
+        this->setVelocity(calculateBounceDirectonPlatform(this->getVelocity(), platform.getPosition().x - this->position.x, platform.getDimensions().width));
         return true;
     }
     return false;
@@ -46,4 +47,19 @@ bool Ball::Collision(const Brick &brick)
         return true;
     }
     return false;
+}
+
+void Ball::stick()
+{
+    isStick = true;
+}
+
+bool Ball::getStick()
+{
+    return isStick;
+}
+
+void Ball::setStick(bool status)
+{
+    isStick = status;
 }

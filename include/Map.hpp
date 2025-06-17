@@ -16,8 +16,10 @@ private:
     std::vector<Brick*> bricks; // плитки
     std::vector<Brick*> combatBricks; // боевые плитки
     std::vector<Brick*> magicBricks; // магические плитки
-    std::vector<Rocket*> rockets; // Хранение ракет на карте
+    std::vector<Rocket> rockets; // Хранение ракет на карте
     std::vector<Bonus> bonuses; // бонусы
+
+    bool isThrowCapture = true;
     bool isThrowBall = false;  // статус полета мяча
 
 public:
@@ -45,6 +47,7 @@ public:
     bool isActivateStickingBonus; // флаг активации бонуса "липучка"
 
     bool isBallThrown() const; // проверка на то, что мяч брошен
+    bool isCaptureThrown() const;
 
     Point getPosition(); // получение позиции карты
     Size getSize();      // получение размеров карты

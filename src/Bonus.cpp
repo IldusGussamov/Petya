@@ -9,7 +9,8 @@ Bonus::Bonus(Point position, Dimension width, Dimension height)
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<int> dist(1, 100);
-        bonusType = dist(gen) % 8; // случайный тип бонуса
+        bonusType = dist(gen) % 9; // случайный тип бонуса
+        
 }
 
 void Bonus::draw() 

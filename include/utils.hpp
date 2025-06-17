@@ -58,8 +58,8 @@ constexpr Dimension PLATFORM_WIDTH = 0.2;                                       
 constexpr Dimension PLATFORM_HEIGHT = 0.02*2; 
 constexpr Dimension BONUS_WIDTH = 0.25 * PLATFORM_WIDTH;                                                                 // ширина бонуса
 constexpr Dimension BONUS_HEIGHT = 0.25 * PLATFORM_WIDTH;                                                                 // высота бонуса 
-const unsigned int ROWS = 40;
-const unsigned int COLS = 20;    
+const unsigned int ROWS = 20;
+const unsigned int COLS = 10;    
 constexpr Angle ANGLE_THROW_BALL = 0;                                                                                                     // количество рядов и колонок платформы 
 constexpr Dimension BRICK_WIDTH = MAP_SIZE.width / COLS;
 constexpr Dimension BRICk_HEIGHT = (MAP_SIZE.height - PLATFORM_ZONE) / ROWS;                                                                                          // высота платформы
@@ -75,6 +75,7 @@ constexpr Dimension ROCKET_WIDTH = (MAP_SIZE.height - PLATFORM_ZONE) / ROWS;
 constexpr Dimension ROCKET_HEIGHT = MAP_SIZE.width / COLS;  
 constexpr Velocity ROCKET_SPEED = {0, -BALL_SPEED * 0.9};  
 constexpr Coordinate DROP_SPEED = BALL_SPEED*0.7; // скорость падения бонусов
+const Health PLATFORM_HEALTH = 3;
 extern bool isGameOver;
 
 // скорость мяча

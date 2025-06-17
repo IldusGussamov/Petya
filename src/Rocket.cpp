@@ -4,7 +4,7 @@
 #include <cmath>
 #include "utils.hpp"
 Rocket::Rocket(Point position, Dimension width, Dimension height)
-    : Entity(position, ROCKET_SPEED, width, height), targeting(true) {
+    : Entity(position, ROCKET_SPEED, width, height), targeting(false) {
         boomStatus = false;
     }
 

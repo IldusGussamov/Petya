@@ -50,6 +50,6 @@ target_link_libraries(arkanoid PRIVATE
 )
 
 # Для Windows: копируем SOIL.dll автоматически
-if(WIN32)
-    set_target_properties(arkanoid PROPERTIES WIN32_EXECUTABLE TRUE)
-endif()
+# if(WIN32)
+#     set_target_properties(arkanoid PROPERTIES WIN32_EXECUTABLE TRUE)
+# endif()

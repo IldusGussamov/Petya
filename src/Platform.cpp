@@ -4,7 +4,7 @@
 
 Platform::Platform(Point position, Velocity velocity) : Entity(position, velocity, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 {
-    hp = 4; // начальное здоровье платформы
+    hp = PLATFORM_HEALTH + 1; // начальное здоровье платформы
     updateBorders();   
 }
 
