@@ -37,9 +37,6 @@ struct Velocity
     Coordinate x, y; // компоненты вектора скорости
 };
 
-extern GLuint PLATFORM_TEXTURE;           // текстура платформы
-extern const char *PLATFORM_TEXTURE_PATH; // путь к текстуре платформы
-
 extern GLuint BALL_TEXTURE; // текстура мяча
 extern const char *BALL_TEXTURE_PATH; // путь к текстуре мяча
 
@@ -48,6 +45,69 @@ extern const char *MAP_TEXTURE_PATH; // путь к текстуре карты
 
 extern GLuint BACKGROUND_TEXTURE; // текстура фона
 extern const char *BACKGROUND_TEXTURE_PATH; // путь к текстуре фона
+
+extern const char *SIMPLE_BRICK_TEXTURE_PATH; // путь к текстуре простого кирпича
+extern GLuint SIMPLE_BRICK_TEXTURE;
+
+extern const char *SERIOUS_BRICK_TEXTURE_PATH; // путь к текстуре серьёзного кирпича
+extern GLuint SERIOUS_BRICK_TEXTURE;
+
+extern const char *POWERFUL_BRICK_TEXTURE_PATH; // путь к текстуре мощного кирпича
+extern GLuint POWERFUL_BRICK_TEXTURE;
+
+extern const char *COMBAT_BRICK_1_TEXTURE_PATH; // путь к текстуре боевого кирпича 1
+extern GLuint COMBAT_BRICK_1_TEXTURE;
+
+extern const char *COMBAT_BRICK_2_TEXTURE_PATH; // путь к текстуре боевого кирпича 2
+extern GLuint COMBAT_BRICK_2_TEXTURE;
+
+extern const char *COMBAT_BRICK_3_TEXTURE_PATH; // путь к текстуре боевого кирпича 3
+extern GLuint COMBAT_BRICK_3_TEXTURE;
+
+extern const char *MAGIC_BRICK_1_TEXTURE_PATH;  // путь к текстуре магического кирпича 1
+extern GLuint MAGIC_BRICK_1_TEXTURE;
+
+extern const char *MAGIC_BRICK_2_TEXTURE_PATH;     // путь к текстуре магического кирпича 2
+extern GLuint MAGIC_BRICK_2_TEXTURE;
+
+extern const char *MAGIC_BRICK_3_TEXTURE_PATH;     // путь к текстуре магического кирпича 3
+extern GLuint MAGIC_BRICK_3_TEXTURE;
+
+extern const char *BONUS_LARGE_TEXTURE_PATH; // путь к текстуре большого бонуса
+extern GLuint BONUS_LARGE_TEXTURE;
+
+extern const char *BONUS_MAGNET_TEXTURE_PATH; // путь к текстуре бонуса магнит
+extern GLuint BONUS_MAGNET_TEXTURE; 
+
+extern const char *BONUS_SHIELD_TEXTURE_PATH;  // путь к текстуре бонуса щит
+extern GLuint BONUS_SHIELD_TEXTURE; 
+
+extern const char *BONUS_X2_TEXTURE_PATH; // путь к текстуре бонуса x2
+extern GLuint BONUS_X2_TEXTURE; 
+
+extern const char *BONUS_ZERO_TEXTURE_PATH; // путь к текстуре бонуса ноль
+extern GLuint BONUS_ZERO_TEXTURE; 
+
+extern const char *BONUS_SMALL_TEXTURE_PATH; // путь к текстуре маленького бонуса
+extern GLuint BONUS_SMALL_TEXTURE; 
+
+extern const char *BONUS_SWAP_TEXTURE_PATH; // путь к текстуре бонуса своп
+extern GLuint BONUS_SWAP_TEXTURE; 
+
+extern const char *ROCKET_TEXTURE_PATH; // путь к текстуре ракеты
+extern GLuint ROCKET_TEXTURE; 
+
+extern const char *PLATFORM_0_TEXTURE_PATH; // путь к текстуре платформы 0
+extern GLuint PLATFORM_TEXTURE; 
+
+extern const char *PLATFORM_1_TEXTURE_PATH;    // путь к текстуре платформы 1
+extern GLuint PLATFORM_1_TEXTURE; 
+
+extern const char *PLATFORM_2_TEXTURE_PATH; // путь к текстуре платформы 2
+extern GLuint PLATFORM_2_TEXTURE; 
+
+extern const char *PLATFORM_3_TEXTURE_PATH; // путь к текстуре платформы 3
+extern GLuint PLATFORM_3_TEXTURE;
 
 constexpr Dimension WINDOW_WIDTH = 800;                                                                                                // ширина окна
 constexpr Dimension WINDOW_HEIGHT = 600;                                                                                                // высота окна
@@ -69,7 +129,7 @@ constexpr Angle MAX_BOUNCE_ANGLE = M_PI * 0.4;                                  
 constexpr Coordinate BALL_SPEED = 0.02 * 0.6/10;
 constexpr unsigned int FPS = 60;   
 constexpr unsigned int UPDATES = FPS * 10;                                                           // скорость мяча
-constexpr Dimension BALL_SIZE = 0.015 * 0.9 * MAP_SIZE.height*1.5;                                                                           // диаметр мяча
+constexpr Dimension BALL_SIZE = 0.01 * 0.9 * MAP_SIZE.height*1.5;                                                                           // диаметр мяча
 constexpr Point BALL_START_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, PLATFORM_POSITION.y + PLATFORM_HEIGHT / 2 + BALL_SIZE / 2 + PLATFORM_HEIGHT*0.1}; // начальные координаты мяча
 constexpr Dimension ROCKET_WIDTH = (MAP_SIZE.height - PLATFORM_ZONE) / ROWS;  
 constexpr Dimension ROCKET_HEIGHT = MAP_SIZE.width / COLS;  

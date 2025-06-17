@@ -13,9 +13,8 @@ void PowerfulBrick::draw()
 
     // плавный переход от синего к фиолетовому
     switch (getHealth()) {
-        case 3: DrawTexturedRectangle(POWERFUL_BRICK_TEXTURE, this->borders, size); break;
-        case 2: DrawTexturedRectangle(SERIOUS_BRICK_TEXTURE, this->borders, size); break;
-        case 1: DrawTexturedRectangle(SIMPLE_BRICK_TEXTURE, this->borders, size); break;
+        case 3: DrawTexturedRectangle(POWERFUL_BRICK_TEXTURE, this->position, size); break;
+        case 2: DrawTexturedRectangle(SERIOUS_BRICK_TEXTURE, this->position, size); break;
+        case 1: DrawTexturedRectangle(SIMPLE_BRICK_TEXTURE, this->position, size); break;
     }
-    drawBorderRectangle(this->borders);
 }
