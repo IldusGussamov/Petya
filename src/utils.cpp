@@ -6,8 +6,11 @@
 
 bool isGameOver = false;
 
-const char *PLATFORM_TEXTURE_PATH = "assets/textures/ball.png";
+const char *PLATFORM_TEXTURE_PATH = "assets/textures/platform.png";
 GLuint PLATFORM_TEXTURE = 0;
+
+const char *BALL_TEXTURE_PATH = "assets/textures/ball.png";
+GLuint BALL_TEXTURE = 0;
 
 const char *MAP_TEXTURE_PATH = "assets/textures/map.jpg";
 GLuint MAP_TEXTURE = 0;
@@ -136,6 +139,7 @@ void loadTextures()
     PLATFORM_TEXTURE = LoadTexture(PLATFORM_TEXTURE_PATH);
     MAP_TEXTURE = LoadTexture(MAP_TEXTURE_PATH);
     BACKGROUND_TEXTURE = LoadTexture(BACKGROUND_TEXTURE_PATH);
+    BALL_TEXTURE = LoadTexture(BALL_TEXTURE_PATH);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

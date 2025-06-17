@@ -10,7 +10,7 @@ Ball::Ball(Point position, Velocity velocity, Dimension size) : Entity(position,
 void Ball::draw()
 {  
     glColor3f(1, 1, 1); // сброс цвета
-    DrawTexturedRectangle(PLATFORM_TEXTURE, position, size);
+    DrawTexturedRectangle(BALL_TEXTURE, position, size);
 }
 void Ball::update()
 {

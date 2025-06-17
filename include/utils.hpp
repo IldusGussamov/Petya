@@ -40,6 +40,9 @@ struct Velocity
 extern GLuint PLATFORM_TEXTURE;           // текстура платформы
 extern const char *PLATFORM_TEXTURE_PATH; // путь к текстуре платформы
 
+extern GLuint BALL_TEXTURE; // текстура мяча
+extern const char *BALL_TEXTURE_PATH; // путь к текстуре мяча
+
 extern GLuint MAP_TEXTURE; // текстура карты
 extern const char *MAP_TEXTURE_PATH; // путь к текстуре карты
 
@@ -52,7 +55,7 @@ constexpr Size MAP_SIZE{1.25, 1.75};                                            
 constexpr Point MAP_POSITION{-(1-0.375), 0.75};                                                                                                  // позиция карты (левая верхняя вершина)
 constexpr Dimension PLATFORM_ZONE = MAP_SIZE.height * 0.4;                                                                              // высота свободной области
 constexpr Dimension PLATFORM_WIDTH = 0.2;                                                                                               // ширина платформы
-constexpr Dimension PLATFORM_HEIGHT = 0.02; 
+constexpr Dimension PLATFORM_HEIGHT = 0.02*2; 
 constexpr Dimension BONUS_WIDTH = 0.25 * PLATFORM_WIDTH;                                                                 // ширина бонуса
 constexpr Dimension BONUS_HEIGHT = 0.25 * PLATFORM_WIDTH;                                                                 // высота бонуса 
 const unsigned int ROWS = 40;
@@ -64,8 +67,9 @@ constexpr Coordinate PLATFORM_SPEED = 0.1 * 0.35 * 0.3/10;                      
 constexpr Point PLATFORM_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, MAP_POSITION.y - MAP_SIZE.height + PLATFORM_ZONE / 5};        // начальная позиция платформы относительно игрового поля
 constexpr Angle MAX_BOUNCE_ANGLE = M_PI * 0.4;                                                                                          // максимальный угол отскока мяча от платформы
 constexpr Coordinate BALL_SPEED = 0.02 * 0.6/10;
-constexpr unsigned int FPS = 60*10;                                                                                           // скорость мяча
-constexpr Dimension BALL_SIZE = 0.01 * 0.9 * MAP_SIZE.height;                                                                           // диаметр мяча
+constexpr unsigned int FPS = 60;   
+constexpr unsigned int UPDATES = FPS * 10;                                                           // скорость мяча
+constexpr Dimension BALL_SIZE = 0.01 * 0.9 * MAP_SIZE.height*1.5;                                                                           // диаметр мяча
 constexpr Point BALL_START_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, PLATFORM_POSITION.y + PLATFORM_HEIGHT / 2 + BALL_SIZE / 2 + PLATFORM_HEIGHT*0.1}; // начальные координаты мяча
 constexpr Dimension ROCKET_WIDTH = (MAP_SIZE.height - PLATFORM_ZONE) / ROWS;  
 constexpr Dimension ROCKET_HEIGHT = MAP_SIZE.width / COLS;  

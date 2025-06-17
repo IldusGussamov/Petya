@@ -172,14 +172,14 @@ void Map::update()
         else
         {
             // Столкновение с платформой
-            if (ball.Collision(platform) and isActivateStickingBonus)
-            {
+            if (ball.Collision(platform) and isActivateStickingBonus and isThrowBall)
+            {   
                 // Если бонус "липучка" активен, мяч прилипает к платформе
                 ball.setPosition({platform.getPosition().x, platform.getPosition().y + platform.getDimensions().height / 2 + ball.getDimensions().height / 2});
                 ball.setVelocity({0, 0}); // останавливаем мяч
                 isActivateStickingBonus = false; // деактивируем бонус
                 isThrowBall = false; // сбрасываем статус броска мяча
-            }
+            } 
             
             // Столкновение с обычными кирпичами
             for (Brick *brick : bricks)
