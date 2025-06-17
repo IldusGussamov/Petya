@@ -9,7 +9,7 @@ bool isGameOver = false;
 const char *BALL_TEXTURE_PATH = "assets/textures/ball.png";
 GLuint BALL_TEXTURE = 0;
 
-const char *MAP_TEXTURE_PATH = "assets/textures/map.jpg";
+const char *MAP_TEXTURE_PATH = "assets/textures/map.png";
 GLuint MAP_TEXTURE = 0;
 
 const char *BACKGROUND_TEXTURE_PATH = "assets/textures/background.png"; 
@@ -42,7 +42,7 @@ GLuint MAGIC_BRICK_2_TEXTURE = 0;
 const char *MAGIC_BRICK_3_TEXTURE_PATH = "assets/textures/magic3.png"; 
 GLuint MAGIC_BRICK_3_TEXTURE = 0;
 
-const char *BONUS_LARGE_TEXTURE_PATH = "assets/textures/magic3.png"; 
+const char *BONUS_LARGE_TEXTURE_PATH = "assets/textures/bonusLarge.png"; 
 GLuint BONUS_LARGE_TEXTURE = 0;
 
 const char *BONUS_MAGNET_TEXTURE_PATH = "assets/textures/bonusMagnet.png";//EWD
@@ -63,10 +63,10 @@ GLuint BONUS_SMALL_TEXTURE = 0;
 const char *BONUS_SWAP_TEXTURE_PATH = "assets/textures/bonusSwap.png"; 
 GLuint BONUS_SWAP_TEXTURE = 0; 
 
-const char *BONUS_SPEED_TEXTURE_PATH = "assets/textures/bonusSwap.png"; 
+const char *BONUS_SPEED_TEXTURE_PATH = "assets/textures/bonusSpeed.png"; 
 GLuint BONUS_SPEED_TEXTURE = 0; 
 
-const char *BONUS_BALL_SPEED_TEXTURE_PATH = "assets/textures/bonusSwap.png"; 
+const char *BONUS_BALL_SPEED_TEXTURE_PATH = "assets/textures/bonusBallSpeed.png"; 
 GLuint BONUS_BALL_SPEED_TEXTURE = 0; 
 
 const char *ROCKET_TEXTURE_PATH = "assets/textures/rocket.png"; //asd
@@ -83,6 +83,9 @@ GLuint PLATFORM_2_TEXTURE = 0;
 
 const char *PLATFORM_3_TEXTURE_PATH = "assets/textures/platform3.png"; //asd
 GLuint PLATFORM_3_TEXTURE = 0; 
+
+const char *SCOPE_TEXTURE_PATH = "assets/textures/scope.png";
+GLuint SCOPE_TEXTURE = 0;
 
 Velocity rotateVelocity(Velocity old_velocity, Angle angle)
 {
@@ -220,15 +223,19 @@ void loadTextures()
     BONUS_LARGE_TEXTURE = LoadTexture(BONUS_LARGE_TEXTURE_PATH);    
     BONUS_MAGNET_TEXTURE = LoadTexture(BONUS_MAGNET_TEXTURE_PATH);  
     BONUS_SHIELD_TEXTURE = LoadTexture(BONUS_SHIELD_TEXTURE_PATH);
+    BONUS_SWAP_TEXTURE = LoadTexture(BONUS_SPEED_TEXTURE_PATH);
     BONUS_X2_TEXTURE = LoadTexture(BONUS_X2_TEXTURE_PATH);
+    BONUS_SPEED_TEXTURE = LoadTexture(BONUS_SPEED_TEXTURE_PATH);
     BONUS_ZERO_TEXTURE = LoadTexture(BONUS_ZERO_TEXTURE_PATH);
     BONUS_SMALL_TEXTURE = LoadTexture(BONUS_SMALL_TEXTURE_PATH);
+    BONUS_BALL_SPEED_TEXTURE = LoadTexture(BONUS_BALL_SPEED_TEXTURE_PATH);
     BONUS_SWAP_TEXTURE = LoadTexture(BONUS_SWAP_TEXTURE_PATH);
     ROCKET_TEXTURE = LoadTexture(ROCKET_TEXTURE_PATH);
-    PLATFORM_0_TEXTURE = LoadTexture(PLATFORM_1_TEXTURE_PATH);
+    PLATFORM_0_TEXTURE = LoadTexture(PLATFORM_0_TEXTURE_PATH);
     PLATFORM_1_TEXTURE = LoadTexture(PLATFORM_1_TEXTURE_PATH);
     PLATFORM_2_TEXTURE = LoadTexture(PLATFORM_2_TEXTURE_PATH);
     PLATFORM_3_TEXTURE = LoadTexture(PLATFORM_3_TEXTURE_PATH);
+    SCOPE_TEXTURE = LoadTexture(SCOPE_TEXTURE_PATH);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

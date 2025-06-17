@@ -11,12 +11,13 @@ Ball::Ball(Point position, Velocity velocity, Dimension size) : Entity(position,
 void Ball::draw()
 {  
     glColor3f(1, 1, 1); // сброс цвета
-    DrawTexturedRectangle(BALL_TEXTURE, position, size);
+    DrawTexturedRectangle(BALL_TEXTURE, position, size, rotate);
 }
 void Ball::update()
 {
     this->position.x += this->velocity.x * speedMultiplier;
     this->position.y += this->velocity.y * speedMultiplier;
+    rotate += 1;
     updateBorders();
 }
 

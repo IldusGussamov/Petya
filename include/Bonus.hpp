@@ -2,6 +2,7 @@
 #include "Entity.hpp"
 #include "Platform.hpp"
 
+
 class Bonus : public Entity
 {
 public:

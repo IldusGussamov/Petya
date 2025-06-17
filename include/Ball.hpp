@@ -13,6 +13,7 @@ public:
     bool Collision(const Platform &platform);
     bool Collision(const Brick &brick);
     bool isStick;
+    Angle rotate = 0;
     bool getStick();
     void setStick(bool status);
 };

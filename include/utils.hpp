@@ -115,6 +115,9 @@ extern GLuint PLATFORM_2_TEXTURE;
 extern const char *PLATFORM_3_TEXTURE_PATH; // путь к текстуре платформы 3
 extern GLuint PLATFORM_3_TEXTURE;
 
+extern const char *SCOPE_TEXTURE_PATH; // путь к текстуре прицела
+extern GLuint SCOPE_TEXTURE;
+
 constexpr Dimension WINDOW_WIDTH = 800;                                                                                                // ширина окна
 constexpr Dimension WINDOW_HEIGHT = 600;                                                                                                // высота окна
 constexpr Size MAP_SIZE{1.25, 1.75};                                                                                                          // размеры карты
@@ -135,7 +138,7 @@ constexpr Angle MAX_BOUNCE_ANGLE = M_PI * 0.4;                                  
 constexpr Coordinate BALL_SPEED = 0.02 * 0.6/10;
 constexpr unsigned int FPS = 60;   
 constexpr unsigned int UPDATES = FPS * 10;                                                           // скорость мяча
-constexpr Dimension BALL_SIZE = 0.01 * 0.9 * MAP_SIZE.height*1.5;                                                                           // диаметр мяча
+constexpr Dimension BALL_SIZE = 0.01 * 0.9 * MAP_SIZE.height*1.5*2;                                                                           // диаметр мяча
 constexpr Point BALL_START_POSITION = {MAP_POSITION.x + MAP_SIZE.width / 2, PLATFORM_POSITION.y + PLATFORM_HEIGHT / 2 + BALL_SIZE / 2 + PLATFORM_HEIGHT*0.1}; // начальные координаты мяча
 constexpr Dimension ROCKET_WIDTH = (MAP_SIZE.height - PLATFORM_ZONE) / ROWS;  
 constexpr Dimension ROCKET_HEIGHT = MAP_SIZE.width / COLS;  

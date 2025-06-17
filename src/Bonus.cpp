@@ -25,7 +25,7 @@ void Bonus::draw()
         case 6: DrawTexturedRectangle(BONUS_SWAP_TEXTURE, this->position, size); break;
         case 7: DrawTexturedRectangle(BONUS_MAGNET_TEXTURE, this->position, size); break;
         case 8: DrawTexturedRectangle(BONUS_X2_TEXTURE, this->position, size); break;
-        case 9: DrawTexturedRectangle(BONUS_SHIELD_TEXTURE, this->position, size); break;
+       // case 9: DrawTexturedRectangle(BONUS_SHIELD_TEXTURE, this->position, size); break;
     }
 }
 

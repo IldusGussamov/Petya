@@ -80,13 +80,12 @@ void Map::draw()
 {
     DrawTexturedRectangle(MAP_TEXTURE, {position.x + size.width/2, position.y - size.height/2}, size); // отрисовка карты
     platform.draw();
-    if (!isThrowBall){
+    if (!isThrowBall && !isGameOver){
         glPushMatrix();
         glTranslatef(balls[0].getPosition().x, balls[0].getPosition().y, 0);
         glRotatef(directionThrowBall*180/M_PI, 0, 0, 1); // поворот направления броска мяча
-        glBegin(GL_LINES);
-        glVertex2f(0, 0);
-        glVertex2f(0, PLATFORM_HEIGHT*10);
+        glTranslatef(0, platform.getDimensions().height*5, 0);
+        DrawTexturedRectangle(SCOPE_TEXTURE, {0, 0}, {PLATFORM_WIDTH*0.25, PLATFORM_WIDTH*0.25}, -directionThrowBall*180/M_PI);
         glEnd();
         glPopMatrix();
     }
@@ -96,14 +95,13 @@ void Map::draw()
     }
     for (Ball &ball : balls)
     {
-        if (ball.getStick())
+        if (ball.getStick() && !isGameOver)
         {
         glPushMatrix();
-        glTranslatef(ball.getPosition().x, ball.getPosition().y, 0);
+        glTranslatef(balls[0].getPosition().x, balls[0].getPosition().y, 0);
         glRotatef(directionThrowBall*180/M_PI, 0, 0, 1); // поворот направления броска мяча
-        glBegin(GL_LINES);
-        glVertex2f(0, 0);
-        glVertex2f(0, PLATFORM_HEIGHT*10);
+        glTranslatef(0, platform.getDimensions().height*5, 0);
+        DrawTexturedRectangle(SCOPE_TEXTURE, {0, 0}, {PLATFORM_WIDTH*0.25, PLATFORM_WIDTH*0.25}, -directionThrowBall*180/M_PI);
         glEnd();
         glPopMatrix();
         }
@@ -217,7 +215,6 @@ void Map::update()
             }
             if(dynamic_cast<MagicBrick*>(*it))
             {
-                std::cout << "fgfgffgf" << std::endl;
                 bonuses.push_back(Bonus((*it)->getPosition(), BONUS_WIDTH, BONUS_HEIGHT));
             }
             delete *it;
@@ -253,50 +250,54 @@ void Map::update()
             if (bonuses[i].getBonusType() == 0) // сброс бонусов
             {
                 resetBonuses();
+                std::cout << "Reset bonus" << std::endl;
             }
 
             if (bonuses[i].getBonusType() == 1) // увеличение скорости платформы
             {
                 platform.setMultiplyVelocity(2);
+                std::cout << "+speed platform" << std::endl;
             }
             if (bonuses[i].getBonusType() == 2) // увеличение размера платформы
             {
                 platform.setSize(PLATFORM_WIDTH * 2, PLATFORM_HEIGHT);
+                std::cout << "+size platform" << std::endl;
             }
             if (bonuses[i].getBonusType() == 3) // уменьшение размера платформы
             {
                 platform.setSize(PLATFORM_WIDTH / 2, PLATFORM_HEIGHT);
+                std::cout << "-size platform" << std::endl;
             }
             if (bonuses[i].getBonusType() == 4) // увеличение скорости мяча
             {
                 for (Ball &ball : balls)
                 {
                     ball.setMultiplyVelocity(1.5);
+                    std::cout << "+speed ball" << std::endl;
                 }
             }
             if (bonuses[i].getBonusType() == 5 || bonuses[i].getBonusType() == 8) // удвоение количества шаров
             {
                 addBall();
+                std::cout << "double ball" << std::endl;
             }
             if (bonuses[i].getBonusType() == 6) // инверсия платформы
             {
                 platform.setMultiplyVelocity(-1);
+                std::cout << "inverse paltform speed" << std::endl;
             }
 
             if (bonuses[i].getBonusType() == 7 && isThrowCapture) // захват мяча
             {
                 isActivateStickingBonus = true;
                 isThrowCapture = false;
+                std::cout << "stick" << std::endl;
             }
 
             // if (bonuses[i].getBonusType() == 9 && isThrowCapture) // Щит платформы
             // {
                 // some code ..
             // }
-            {
-                isActivateStickingBonus = true;
-                isThrowCapture = false;
-            }
 
             bonuses.erase(bonuses.begin() + i);
             i--; // Уменьшаем индекс, чтобы не пропустить следующий бонус
