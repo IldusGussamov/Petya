@@ -52,7 +52,12 @@ void Rocket::Collision(const Platform &platform)
 
 void Rocket::draw()
 {
-    DrawTexturedRectangle(ROCKET_TEXTURE, this->position, size);
+    Dimension normv = getNorm(velocity.x ,velocity.y);
+    Coordinate cosv = velocity.x / normv;
+    Coordinate sinv = velocity.y / normv;
+    glPushMatrix();
+    DrawTexturedRectangle(ROCKET_TEXTURE, this->position, size, 180/M_PI*getAngle(cosv, sinv)-90);
+    glPopMatrix();
 }
 
 bool Rocket::isBoom()

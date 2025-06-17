@@ -159,6 +159,8 @@ Angle calculateAngleBetweenVectors(Coordinate x1, Coordinate y1, Coordinate x2, 
 
 GLuint LoadTexture(const char *path); // загрузка текстуры из файла
 
-void DrawTexturedRectangle(GLuint texture, Point position, Size size); // рисование текстурированного прямоугольника
+void DrawTexturedRectangle(GLuint texture, Point position, Size size, Angle angle = 0); // рисование текстурированного прямоугольника
 
 void loadTextures(); // загрузка текстур
+
+Angle getAngle(Coordinate x, Coordinate y); // получение точного угла от 0 до 2Pi через косинус и синус

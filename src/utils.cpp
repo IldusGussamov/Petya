@@ -179,18 +179,20 @@ GLuint LoadTexture(const char *path)
     return texture;
 }
 
-void DrawTexturedRectangle(GLuint texture, Point position, Size size)
+void DrawTexturedRectangle(GLuint texture, Point position, Size size, Angle angle)
 {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
-
+    glPushMatrix();
+    glTranslatef(position.x, position.y, 0);
+    glRotatef(angle, 0, 0, 1);
     glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex2f(position.x-size.width/2, position.y+size.height/2);
-    glTexCoord2f(1, 0); glVertex2f(position.x + size.width/2, position.y+size.height/2);
-    glTexCoord2f(1, 1); glVertex2f(position.x + size.width/2, position.y - size.height/2);
-    glTexCoord2f(0, 1); glVertex2f(position.x - size.width/2, position.y - size.height/2);
+    glTexCoord2f(0, 0); glVertex2f(-size.width/2, size.height/2);
+    glTexCoord2f(1, 0); glVertex2f(size.width/2, size.height/2);
+    glTexCoord2f(1, 1); glVertex2f(size.width/2, -size.height/2);
+    glTexCoord2f(0, 1); glVertex2f(-size.width/2, -size.height/2);
     glEnd();
-
+    glPopMatrix();
     glDisable(GL_TEXTURE_2D);
 }
 
@@ -224,4 +226,13 @@ void loadTextures()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+Angle getAngle(Coordinate x, Coordinate y)
+{
+    Angle angle = std::atan2(y, x);  // Диапазон: [-π, π]
+    if (angle < 0) {
+        angle += 2 * M_PI;  // Преобразуем в [0, 2π)
+    }
+    return angle;
 }
