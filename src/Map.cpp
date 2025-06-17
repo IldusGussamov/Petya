@@ -31,15 +31,15 @@ void Map::generateBricks()
             int randomValue = dist(gen);
             if (randomValue < 1)
             {
-                magicBricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 3));
+                bricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 3));
             }
             if (randomValue >= 113)
             {
-                magicBricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 2));
+                bricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 2));
             }
             if (randomValue >= 3 and randomValue < 4)
             {
-                magicBricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 1));
+                bricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 1));
             }
             if (randomValue >= 70 and randomValue < 75)
             {
@@ -58,15 +58,15 @@ void Map::generateBricks()
             {
                 if (randomValue >= 90 and randomValue < 99)
                 {
-                    combatBricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 1));
+                    bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 1));
                 }
                 if (randomValue >= 99 && randomValue < 110)
                 {
-                    combatBricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 2));
+                    bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 2));
                 }
                 if (randomValue >= 110 && randomValue <= 113)
                 {
-                    combatBricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 3));
+                    bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 3));
                 }
             }
             actualPosition.x += BRICK_WIDTH;
@@ -115,16 +115,6 @@ void Map::draw()
         bonus.draw();
     }
 
-    for (Brick *brick : combatBricks)
-    {
-        brick->draw();
-    }
-
-    for (Brick *brick : magicBricks)
-    {
-        brick->draw();
-    }
-
     for (Rocket &rocket : rockets)
     {
         rocket.draw();
@@ -137,7 +127,7 @@ void Map::update()
         return;
 
     // Проверка условий завершения игры
-    if (bricks.empty() && combatBricks.empty())
+    if (bricks.empty())
     {
         isGameOver = true;
         return;
@@ -211,36 +201,6 @@ void Map::update()
                     break;
                 }
             }
-
-            // Столкновение с боевыми кирпичами
-            for (Brick *brick : combatBricks)
-            {
-
-                Velocity oldVel = ball.getVelocity();
-                bool collided = ball.Collision(*brick);
-                Velocity newVel = ball.getVelocity();
-                if (oldVel.x != newVel.x || oldVel.y != newVel.y)
-                {
-                    brick->takeDamage(1);
-                    break;
-                }
-
-                // Если боевой кирпич разрушен, создаем ракету
-            }
-
-            // Столкновение с магическими кирпичами
-            for (Brick *brick : magicBricks)
-            {
-                Velocity oldVel = ball.getVelocity();
-                bool collided = ball.Collision(*brick);
-                Velocity newVel = ball.getVelocity();
-
-                if (oldVel.x != newVel.x || oldVel.y != newVel.y)
-                {
-                    brick->takeDamage(1);
-                    break;
-                }
-            }
         }
 
         ball.update();
@@ -249,42 +209,19 @@ void Map::update()
     // Удаление разрушенных обычных кирпичей
     for (auto it = bricks.begin(); it != bricks.end();)
     {
-        if ((*it)->getHealth() <= 0)
+        if ((*it)->isDestroyed())
         {
+            if (dynamic_cast<CombatBrick*>(*it))
+            {
+                rockets.push_back(Rocket((*it)->getPosition(), ROCKET_WIDTH, ROCKET_HEIGHT));
+            }
+            if(dynamic_cast<MagicBrick*>(*it))
+            {
+                std::cout << "fgfgffgf" << std::endl;
+                bonuses.push_back(Bonus((*it)->getPosition(), BONUS_WIDTH, BONUS_HEIGHT));
+            }
             delete *it;
             it = bricks.erase(it);
-        }
-        else
-        {
-            ++it;
-        }
-    }
-
-    // Удаление разрушенных боевых кирпей
-    for (auto it = combatBricks.begin(); it != combatBricks.end();)
-    {   
-        (*it)->update(); // Обновляем состояние боевого кирпича
-        if ((*it)->isDestroyed())
-        {
-            rockets.push_back(Rocket((*it)->getPosition(), ROCKET_WIDTH, ROCKET_HEIGHT));
-            delete *it;
-            it = combatBricks.erase(it);
-        }
-        else
-        {
-            ++it;
-        }
-    }
-
-    // Удаление разрушенных магических кирпей
-    for (auto it = magicBricks.begin(); it != magicBricks.end();)
-    {
-        (*it)->update(); // Обновляем состояние магического кирпича
-        if ((*it)->isDestroyed())
-        {
-            bonuses.push_back(Bonus((*it)->getPosition(), BONUS_WIDTH, BONUS_HEIGHT));
-            delete *it;
-            it = magicBricks.erase(it);
         }
         else
         {
@@ -453,21 +390,6 @@ void Map::resetMap()
             delete brick;
     }
     bricks.clear();
-    // Удаление боевых кирпичей
-    for (Brick *brick : combatBricks)
-    {
-        if (brick)
-            delete brick;
-    }
-    combatBricks.clear();
-
-    for (Brick *brick : magicBricks)
-    {
-        if (brick)
-            delete brick;
-    }
-    magicBricks.clear();
-
     rockets.clear();
 
     generateBricks(); // Генерация новой карты

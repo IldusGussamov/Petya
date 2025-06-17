@@ -14,8 +14,6 @@ private:
     Size size;                 // размер карты (Ox вправо, а Oy вниз)
     std::vector<Ball> balls;   // мячи
     std::vector<Brick*> bricks; // плитки
-    std::vector<Brick*> combatBricks; // боевые плитки
-    std::vector<Brick*> magicBricks; // магические плитки
     std::vector<Rocket> rockets; // Хранение ракет на карте
     std::vector<Bonus> bonuses; // бонусы
 
