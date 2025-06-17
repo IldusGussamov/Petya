@@ -1,5 +1,6 @@
 #include "PowerfulBrick.hpp"
 #include <GL/glut.h>
+#include "utils.hpp"
 
 PowerfulBrick::PowerfulBrick(Point position, Dimension width, Dimension height)
     : Brick(position, width, height, 3) // 3 HP
@@ -12,9 +13,9 @@ void PowerfulBrick::draw()
 
     // плавный переход от синего к фиолетовому
     switch (getHealth()) {
-        case 3: glColor3f(0.4f, 0.3f, 0.8f); break;
-        case 2: glColor3f(0.2549f, 0.1294f, 0.6039f); break;
-        case 1:  glColor3f(0.0f, 0.4f, 0.8f); break;
+        case 3: DrawTexturedRectangle(POWERFUL_BRICK_TEXTURE, this->borders, size); break;
+        case 2: DrawTexturedRectangle(SERIOUS_BRICK_TEXTURE, this->borders, size); break;
+        case 1: DrawTexturedRectangle(SIMPLE_BRICK_TEXTURE, this->borders, size); break;
     }
     drawBorderRectangle(this->borders);
 }
