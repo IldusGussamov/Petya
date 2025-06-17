@@ -94,6 +94,12 @@ extern GLuint BONUS_SMALL_TEXTURE;
 extern const char *BONUS_SWAP_TEXTURE_PATH; // путь к текстуре бонуса своп
 extern GLuint BONUS_SWAP_TEXTURE; 
 
+extern const char *BONUS_SPEED_TEXTURE_PATH; // путь к текстуре бонуса спид
+extern GLuint BONUS_SPEED_TEXTURE; 
+
+extern const char *BONUS_BALL_SPEED_TEXTURE_PATH; // путь к текстуре бонуса бол спид
+extern GLuint BONUS_BALL_SPEED_TEXTURE; 
+
 extern const char *ROCKET_TEXTURE_PATH; // путь к текстуре ракеты
 extern GLuint ROCKET_TEXTURE; 
 
@@ -116,8 +122,8 @@ constexpr Point MAP_POSITION{-(1-0.375), 0.75};                                 
 constexpr Dimension PLATFORM_ZONE = MAP_SIZE.height * 0.4;                                                                              // высота свободной области
 constexpr Dimension PLATFORM_WIDTH = 0.2;                                                                                               // ширина платформы
 constexpr Dimension PLATFORM_HEIGHT = 0.02*2; 
-constexpr Dimension BONUS_WIDTH = 0.25 * PLATFORM_WIDTH;                                                                 // ширина бонуса
-constexpr Dimension BONUS_HEIGHT = 0.25 * PLATFORM_WIDTH;                                                                 // высота бонуса 
+constexpr Dimension BONUS_WIDTH = 0.5 * PLATFORM_WIDTH;                                                                 // ширина бонуса
+constexpr Dimension BONUS_HEIGHT = 0.5 * PLATFORM_WIDTH;                                                                 // высота бонуса 
 const unsigned int ROWS = 20;
 const unsigned int COLS = 10;    
 constexpr Angle ANGLE_THROW_BALL = 0;                                                                                                     // количество рядов и колонок платформы 
