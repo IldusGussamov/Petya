@@ -1,5 +1,7 @@
 #pragma once
 #include <math.h>
+#include <GL/freeglut.h>
+#include <string>
 
 enum Sides // индексация вершин прямоугольника
 {
@@ -34,11 +36,20 @@ struct Velocity
 {
     Coordinate x, y; // компоненты вектора скорости
 };
- 
-constexpr Dimension WINDOW_WIDTH = 1080;
-constexpr Dimension WINDOW_HEIGHT = 720;                                                                                               // позиция карты
-constexpr Size MAP_SIZE{1, 2};  
-constexpr Point MAP_POSITION{-0.5, 1};                                                                                                      // размеры карты
+
+extern GLuint PLATFORM_TEXTURE;           // текстура платформы
+extern const char *PLATFORM_TEXTURE_PATH; // путь к текстуре платформы
+
+extern GLuint MAP_TEXTURE; // текстура карты
+extern const char *MAP_TEXTURE_PATH; // путь к текстуре карты
+
+extern GLuint BACKGROUND_TEXTURE; // текстура фона
+extern const char *BACKGROUND_TEXTURE_PATH; // путь к текстуре фона
+
+constexpr Dimension WINDOW_WIDTH = 800;                                                                                                // ширина окна
+constexpr Dimension WINDOW_HEIGHT = 600;                                                                                                // высота окна
+constexpr Size MAP_SIZE{1.25, 1.75};                                                                                                          // размеры карты
+constexpr Point MAP_POSITION{-(1-0.375), 0.75};                                                                                                  // позиция карты (левая верхняя вершина)
 constexpr Dimension PLATFORM_ZONE = MAP_SIZE.height * 0.4;                                                                              // высота свободной области
 constexpr Dimension PLATFORM_WIDTH = 0.2;                                                                                               // ширина платформы
 constexpr Dimension PLATFORM_HEIGHT = 0.02; 
@@ -80,3 +91,9 @@ Coordinate cross(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2); //
 Velocity calculateBounceDirectonPlatform(Velocity old_velocity, Coordinate difference, Dimension PLATFORM_W = PLATFORM_WIDTH); // вычисление скорости после отскока от платформы
 
 Angle calculateAngleBetweenVectors(Coordinate x1, Coordinate y1, Coordinate x2, Coordinate y2); // вычисление угла между векторами
+
+GLuint LoadTexture(const char *path); // загрузка текстуры из файла
+
+void DrawTexturedRectangle(GLuint texture, Point position, Size size); // рисование текстурированного прямоугольника
+
+void loadTextures(); // загрузка текстур
