@@ -24,7 +24,12 @@ add_executable(arkanoid
     src/PowerfulBrick.cpp
     src/SimpleBrick.cpp
     src/SeriousBrick.cpp
-)
+    src/CombatBrick.cpp
+    src/MagicBrick.cpp
+    src/Bonus.cpp
+    src/Rocket.cpp
+    )
+
 
 add_custom_command(TARGET arkanoid POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory

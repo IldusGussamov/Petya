@@ -39,7 +39,7 @@ void Brick::update()
     }
 }
 
-void Brick::draw() 
+void Brick::draw()
 {
     // if (destroyed)
     //     return;

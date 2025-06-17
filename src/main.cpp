@@ -40,6 +40,7 @@ int main(int argc, char **argv)
     // glutFullScreen();
     loadTextures();
     glutReshapeFunc(reshape);   
+
     glutDisplayFunc(renderScene);
     glutKeyboardFunc(keyboardDown);
     glutTimerFunc(1000 / UPDATES, timerFunc, 0);
