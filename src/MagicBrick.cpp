@@ -13,9 +13,8 @@ void MagicBrick::draw()
 
     // плавный переход от ярко-жёлтого к тёмно-жёлтому
     switch (getHealth()) {
-        case 3: glColor3f(1.0f, 1.0f, 0.0f); break;         // ярко-жёлтый
-        case 2: glColor3f(0.8f, 0.8f, 0.0f); break;         // средний жёлтый
-        case 1: glColor3f(0.5f, 0.5f, 0.0f); break;         // тёмно-жёлтый
+        case 3: DrawTexturedRectangle(MAGIC_BRICK_3_TEXTURE, this->position, size); break;
+        case 2: DrawTexturedRectangle(MAGIC_BRICK_2_TEXTURE, this->position, size); break;
+        case 1: DrawTexturedRectangle(MAGIC_BRICK_1_TEXTURE, this->position, size); break;
     }
-    drawBorderRectangle(this->borders);
 }

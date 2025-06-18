@@ -12,13 +12,14 @@ public:
     void draw() override;
     bool isBoom();
     void Boom();
-
+    void Collision(const Shield &shield);
     void Collision(const Platform &platform);
+    void Bounce();
 
 private:
     bool targeting;
     Point targetPosition;
-
+    bool shieldBounce = false;
     bool boomStatus;
 
 protected:

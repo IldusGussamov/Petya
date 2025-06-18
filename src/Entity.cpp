@@ -88,7 +88,12 @@ void Entity::setSize(Dimension width, Dimension height)
     updateBorders();
 }
 
-void Entity::setMultiplyVelocity(int multiplier)
+void Entity::setMultiplyVelocity(float multiplier)
 {
-    speedMultiplier = multiplier;
+    this->speedMultiplier = multiplier;
+}
+
+float Entity::getSpeedMultiplier() const
+{
+    return speedMultiplier;
 }

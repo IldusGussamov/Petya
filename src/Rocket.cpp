@@ -4,7 +4,7 @@
 #include <cmath>
 #include "utils.hpp"
 Rocket::Rocket(Point position, Dimension width, Dimension height)
-    : Entity(position, ROCKET_SPEED, width, height), targeting(true) {
+    : Entity(position, ROCKET_SPEED, width, height), targeting(false) {
         boomStatus = false;
     }
 
@@ -21,7 +21,7 @@ void Rocket::launchStraight()
 
 void Rocket::update()
 {
-    if (targeting)
+    if (targeting and !shieldBounce)
     {
         // Движение к платформе
         float dx = targetPosition.x - position.x;
@@ -50,10 +50,16 @@ void Rocket::Collision(const Platform &platform)
     }
 }
 
+
+
 void Rocket::draw()
 {
-    glColor3f(1, 0.2, 0.2);
-    drawBorderRectangle(borders);
+    Dimension normv = getNorm(velocity.x ,velocity.y);
+    Coordinate cosv = velocity.x / normv;
+    Coordinate sinv = velocity.y / normv;
+    glPushMatrix();
+    DrawTexturedRectangle(ROCKET_TEXTURE, this->position, size, 180/M_PI*getAngle(cosv, sinv)-90);
+    glPopMatrix();
 }
 
 bool Rocket::isBoom()
@@ -63,4 +69,23 @@ bool Rocket::isBoom()
 void Rocket::Boom()
 {
     boomStatus = true;
+}
+
+void Rocket::Collision(const Shield &shield)
+{
+        Normal normal;
+        Coordinate x = (position.x - shield.getPosition().x) / (shield.getDimensions().width / 2 + this->getDimensions().width / 2);
+        Coordinate y = (position.y - shield.getPosition().y) / (shield.getDimensions().height / 2 + this->getDimensions().height / 2);
+        if (abs(x) <= abs(y))
+            normal = {0, y / abs(y)};
+        else if (abs(x) >= abs(y))
+            normal = {x / abs(x), 0};
+        else if (abs(x) == abs(y))
+            normal = {x / abs(x), y / abs(y)};
+        this->setVelocity(calculateBounceDirection(this->getVelocity(), normal));
+}
+
+void Rocket::Bounce()
+{
+    shieldBounce = true;
 }

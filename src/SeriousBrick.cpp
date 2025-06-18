@@ -14,12 +14,7 @@ void SeriousBrick::draw()
     // Желтый при 2 HP, оранжевый при 1 HP
     switch (getHealth())
     {
-    case 2:
-        glColor3f(0.2549f, 0.1294f, 0.6039f);
-        break;
-    case 1:
-        glColor3f(0.0f, 0.4f, 0.8f);
-        break;
+        case 2: DrawTexturedRectangle(SERIOUS_BRICK_TEXTURE, this->position, size); break;
+        case 1: DrawTexturedRectangle(SIMPLE_BRICK_TEXTURE, this->position, size); break;
     }
-    drawBorderRectangle(this->borders); // был убран getBorders() и было дано название для отрисовки по границе
 }

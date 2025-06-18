@@ -9,6 +9,5 @@ SimpleBrick::SimpleBrick(Point position, Dimension width, Dimension height)
 void SimpleBrick::draw()
 {
     if (isDestroyed()) return;
-        glColor3f(0.0f, 0.4f, 0.8f);
-    drawBorderRectangle(this->borders);
+        DrawTexturedRectangle(SIMPLE_BRICK_TEXTURE, this->position, size);
 } 

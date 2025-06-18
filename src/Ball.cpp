@@ -5,17 +5,19 @@
 
 Ball::Ball(Point position, Velocity velocity, Dimension size) : Entity(position, velocity, size, size)
 {
+    isStick = false;
 }
 
 void Ball::draw()
-{
-    glColor3f(0, 0.9, 1);
-    drawBorderRectangle(borders);
+{  
+    glColor3f(1, 1, 1); // сброс цвета
+    DrawTexturedRectangle(BALL_TEXTURE, position, size, rotate);
 }
 void Ball::update()
 {
     this->position.x += this->velocity.x * speedMultiplier;
     this->position.y += this->velocity.y * speedMultiplier;
+    rotate += 1;
     updateBorders();
 }
 
@@ -23,7 +25,7 @@ bool Ball::Collision(const Platform &platform)
 {
     if (this->checkCollision(platform))
     {
-        this->setVelocity(calculateBounceDirectonPlatform(this->getVelocity(), platform.getPosition().x - this->position.x));
+        this->setVelocity(calculateBounceDirectonPlatform(this->getVelocity(), platform.getPosition().x - this->position.x, platform.getDimensions().width));
         return true;
     }
     return false;
@@ -46,4 +48,19 @@ bool Ball::Collision(const Brick &brick)
         return true;
     }
     return false;
+}
+
+void Ball::stick()
+{
+    isStick = true;
+}
+
+bool Ball::getStick()
+{
+    return isStick;
+}
+
+void Ball::setStick(bool status)
+{
+    isStick = status;
 }

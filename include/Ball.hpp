@@ -9,6 +9,11 @@ public:
     Ball(Point position, Velocity velocity, Dimension size);
     void draw() override;
     void update() override;
+    void stick();
     bool Collision(const Platform &platform);
     bool Collision(const Brick &brick);
+    bool isStick;
+    Angle rotate = 0;
+    bool getStick();
+    void setStick(bool status);
 };

@@ -17,7 +17,9 @@ public:
 
     void setSize(Dimension width, Dimension height); // установка габаритов
 
-    void setMultiplyVelocity(int multiplier); // умножение скорости на множитель
+    void setMultiplyVelocity(float multiplier); // умножение скорости на множитель
+
+    float getSpeedMultiplier() const; // получение множителя скорости
 
     Velocity getVelocity() const; // получение скорости
 
@@ -50,5 +52,5 @@ protected:
 
     Velocity velocity; // скорость сущности
 
-    int speedMultiplier = 1; // множитель скорости, по умолчанию равен 1
+    float speedMultiplier = 1; // множитель скорости, по умолчанию равен 1
 };
