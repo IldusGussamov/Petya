@@ -15,7 +15,7 @@ Map::Map(Point position, Size size) : platform(PLATFORM_POSITION, {0, 0})
     this->position = position;
     this->size = size;
     this->generateBricks();
-    this->directionThrowBall  = 0;
+    this->directionThrowBall = 0;
 }
 
 void Map::generateBricks()
@@ -29,7 +29,7 @@ void Map::generateBricks()
         {
             std::uniform_int_distribution<int> dist(1, 120);
             int randomValue = dist(gen);
-            if (randomValue < 1)
+            if (randomValue < 3)
             {
                 bricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 3));
             }
@@ -66,8 +66,15 @@ void Map::generateBricks()
                 }
                 if (randomValue >= 110 && randomValue <= 113)
                 {
-                    bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 3));
+                    bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 2));
                 }
+            }
+            if (!bricks.empty() && dist(gen) > 90)
+            {
+                Coordinate speed = BALL_SPEED * 0.1;
+                if (dynamic_cast<CombatBrick*>(bricks.back()))
+                    speed *= 0.4;
+                bricks.back()->setMovePattern(speed, PLATFORM_WIDTH, dist(gen) % 4);
             }
             actualPosition.x += BRICK_WIDTH;
         }
@@ -78,14 +85,15 @@ void Map::generateBricks()
 
 void Map::draw()
 {
-    DrawTexturedRectangle(MAP_TEXTURE, {position.x + size.width/2, position.y - size.height/2}, size); // отрисовка карты
+    DrawTexturedRectangle(MAP_TEXTURE, {position.x + size.width / 2, position.y - size.height / 2}, size); // отрисовка карты
     platform.draw();
-    if (!isThrowBall && !isGameOver){
+    if (!isThrowBall && !isGameOver)
+    {
         glPushMatrix();
         glTranslatef(balls[0].getPosition().x, balls[0].getPosition().y, 0);
-        glRotatef(directionThrowBall*180/M_PI, 0, 0, 1); // поворот направления броска мяча
-        glTranslatef(0, platform.getDimensions().height*5, 0);
-        DrawTexturedRectangle(SCOPE_TEXTURE, {0, 0}, {PLATFORM_WIDTH*0.25, PLATFORM_WIDTH*0.25}, -directionThrowBall*180/M_PI);
+        glRotatef(directionThrowBall * 180 / M_PI, 0, 0, 1); // поворот направления броска мяча
+        glTranslatef(0, platform.getDimensions().height * 5, 0);
+        DrawTexturedRectangle(SCOPE_TEXTURE, {0, 0}, {PLATFORM_WIDTH * 0.25, PLATFORM_WIDTH * 0.25}, -directionThrowBall * 180 / M_PI);
         glEnd();
         glPopMatrix();
     }
@@ -97,13 +105,13 @@ void Map::draw()
     {
         if (ball.getStick() && !isGameOver)
         {
-        glPushMatrix();
-        glTranslatef(balls[0].getPosition().x, balls[0].getPosition().y, 0);
-        glRotatef(directionThrowBall*180/M_PI, 0, 0, 1); // поворот направления броска мяча
-        glTranslatef(0, platform.getDimensions().height*5, 0);
-        DrawTexturedRectangle(SCOPE_TEXTURE, {0, 0}, {PLATFORM_WIDTH*0.25, PLATFORM_WIDTH*0.25}, -directionThrowBall*180/M_PI);
-        glEnd();
-        glPopMatrix();
+            glPushMatrix();
+            glTranslatef(balls[0].getPosition().x, balls[0].getPosition().y, 0);
+            glRotatef(directionThrowBall * 180 / M_PI, 0, 0, 1); // поворот направления броска мяча
+            glTranslatef(0, platform.getDimensions().height * 5, 0);
+            DrawTexturedRectangle(SCOPE_TEXTURE, {0, 0}, {PLATFORM_WIDTH * 0.25, PLATFORM_WIDTH * 0.25}, -directionThrowBall * 180 / M_PI);
+            glEnd();
+            glPopMatrix();
         }
         ball.draw();
     }
@@ -166,6 +174,93 @@ void Map::update()
     platform.update();
     bounceOffWalls();
 
+    for (Brick *brick : bricks)
+    {
+        if (brick->hasPattern())
+        {
+            // Проверка коллизии с границами карты
+            int currentDirection = brick->getCurrentPattern();
+            const float eps = std::min(BRICK_WIDTH, BRICk_HEIGHT) * 0.01f; // 1% от меньшего размера - погрешность для коллизии
+
+            // Проверка коллизий с границами
+            bool collisionWithMap = false;
+            switch (currentDirection)
+            {
+            case 0: // Вправо
+                collisionWithMap = (brick->getRightBorder() + eps >= getRightBorder());
+                break;
+            case 1: // Влево
+                collisionWithMap = (brick->getLeftBorder() - eps <= getLeftBorder());
+                break;
+            case 2: // Вверх
+                collisionWithMap = (brick->getTopBorder() + eps >= getTopBorder());
+                break;
+            case 3: // Вниз
+                collisionWithMap = (brick->getBottomBorder() - eps <= (getButtomBorder() + PLATFORM_ZONE));
+                break;
+            }
+            // Проверка коллизии с другими кирпичами
+            bool collisionWithBricks = false;
+
+            if (!collisionWithMap)
+            {
+                for (Brick *otherBrick : bricks)
+                {
+                    if (brick == otherBrick || otherBrick->isDestroyed())
+                        continue;
+
+                    // Проверяем только кирпичи в направлении движения с учетом eps
+                    bool isInDirection = false;
+                    switch (currentDirection)
+                    {
+                    case 0: // Вправо
+                        isInDirection = (otherBrick->getLeftBorder() >= brick->getRightBorder() - eps);
+                        break;
+                    case 1: // Влево
+                        isInDirection = (otherBrick->getRightBorder() <= brick->getLeftBorder() + eps);
+                        break;
+                    case 2: // Вверх
+                        isInDirection = (otherBrick->getBottomBorder() >= brick->getTopBorder() - eps);
+                        break;
+                    case 3: // Вниз
+                        isInDirection = (otherBrick->getTopBorder() <= brick->getBottomBorder() + eps);
+                        break;
+                    }
+
+                    if (isInDirection && brick->checkCollision(*otherBrick))
+                    {
+                        collisionWithBricks = true;
+                        break;
+                    }
+                }
+            }
+
+            // Если есть коллизия, меняем направление
+            if (collisionWithMap || collisionWithBricks)
+            {
+                int newDirection = currentDirection;
+                switch (currentDirection)
+                {
+                case 0:
+                    newDirection = 1;
+                    break; // Вправо -> Влево
+                case 1:
+                    newDirection = 0;
+                    break; // Влево -> Вправо
+                case 2:
+                    newDirection = 3;
+                    break; // Вверх -> Вниз
+                case 3:
+                    newDirection = 2;
+                    break; // Вниз -> Вверх
+                }
+                float speed = fabs(brick->getVelocity().x ?: brick->getVelocity().y);
+                brick->setMovePattern(speed, BRICK_WIDTH, newDirection);
+            }
+        }
+        brick->update();
+    }
+
     // Обновление шаров и проверка столкновени
     for (Ball &ball : balls)
     {
@@ -178,14 +273,14 @@ void Map::update()
         {
             // Столкновение с платформой
             if (ball.Collision(platform) and isActivateStickingBonus)
-            {   
+            {
                 ball.stick();
                 // Если бонус "липучка" активен, мяч прилипает к платформе
                 ball.setPosition({platform.getPosition().x, BALL_START_POSITION.y});
-                ball.setVelocity({0, 0}); // останавливаем мяч.
+                ball.setVelocity({0, 0});        // останавливаем мяч.
                 isActivateStickingBonus = false; // деактивируем бонус
-            } 
-            
+            }
+
             // Столкновение с обычными кирпичами
             for (Brick *brick : bricks)
             {
@@ -209,11 +304,11 @@ void Map::update()
     {
         if ((*it)->isDestroyed())
         {
-            if (dynamic_cast<CombatBrick*>(*it))
+            if (dynamic_cast<CombatBrick *>(*it))
             {
                 rockets.push_back(Rocket((*it)->getPosition(), ROCKET_WIDTH, ROCKET_HEIGHT));
             }
-            if(dynamic_cast<MagicBrick*>(*it))
+            if (dynamic_cast<MagicBrick *>(*it))
             {
                 bonuses.push_back(Bonus((*it)->getPosition(), BONUS_WIDTH, BONUS_HEIGHT));
             }
@@ -329,9 +424,10 @@ void Map::update()
 }
 
 void Map::throwBall()
-{   if (!isCaptureThrown())
+{
+    if (!isCaptureThrown())
     {
-        for(Ball &ball : balls)
+        for (Ball &ball : balls)
         {
             if (ball.getStick())
             {
@@ -402,7 +498,7 @@ void Map::addBall()
         if (ball.getStick())
             continue;
         float randomValue = dist(gen);
-        extraBalls.emplace_back(ball.getPosition(), rotateVelocity(ball.getVelocity(), 2 * M_PI * randomValue / 100), BALL_SIZE);
+        extraBalls.emplace_back(ball.getPosition(), rotateVelocity(ball.getVelocity(), M_PI/4 * randomValue / 100), BALL_SIZE);
         extraBalls.back().setMultiplyVelocity(ball.getSpeedMultiplier());
     }
     balls.insert(balls.end(), extraBalls.begin(), extraBalls.end());
@@ -454,10 +550,19 @@ void Map::rotateLeftdirectionThrowBall()
 void Map::rotateRightdirectionThrowBall()
 {
     if (directionThrowBall >= -MAX_BOUNCE_ANGLE)
-        directionThrowBall -= M_PI / 80; 
+        directionThrowBall -= M_PI / 80;
 }
 
 bool Map::isCaptureThrown() const
 {
     return isThrowCapture;
+}
+
+Map::~Map()
+{
+    for (Brick *brick : bricks)
+    {
+        delete brick;
+    }
+    bricks.clear();
 }

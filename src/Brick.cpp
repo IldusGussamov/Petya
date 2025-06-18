@@ -3,7 +3,10 @@
 #include <utils.hpp>
 
 Brick::Brick(Point position, Dimension width, Dimension height, Health health)
-    : Entity(position, Velocity{0, 0}, width, height), health(health), destroyed(false)
+    : Entity(position, {0, 0}, width, height),
+      health(health), destroyed(false),
+      havePattern(false), moveDirection(0),
+      moveSpeed(0), moveDistance(0), maxDistance(0)
 {
     updateBorders();
 }
@@ -37,6 +40,8 @@ void Brick::update()
     {
         destroyed = true;
     }
+    updateBorders();
+    updatePosition();
 }
 
 void Brick::draw()
@@ -59,4 +64,43 @@ void Brick::draw()
     // }
 
     // drawBorderRectangle(borders);
+}
+
+void Brick::setMovePattern(float speed, float distance, int initialDirection)
+{
+    havePattern = (speed > 0 && distance > 0);
+    if (havePattern)
+    {
+        moveSpeed = speed;
+        maxDistance = distance;
+        moveDirection = initialDirection;
+        moveDistance = 0;
+
+        // Устанавливаем начальную скорость в зависимости от направления
+        switch (moveDirection)
+        {
+        case 0:
+            setVelocity({moveSpeed, 0});
+            break; // вправо
+        case 1:
+            setVelocity({-moveSpeed, 0});
+            break; // влево
+        case 2:
+            setVelocity({0, moveSpeed});
+            break; // вверх
+        case 3:
+            setVelocity({0, -moveSpeed});
+            break; // вниз
+        }
+    }
+}
+
+bool Brick::hasPattern() const
+{
+    return havePattern;
+}
+
+int Brick::getCurrentPattern() const
+{
+    return moveDirection;
 }
