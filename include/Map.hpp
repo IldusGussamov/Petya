@@ -47,6 +47,8 @@ public:
     bool isBallThrown() const; // проверка на то, что мяч брошен
     bool isCaptureThrown() const;
 
+    ~Map();
+
     Point getPosition(); // получение позиции карты
     Size getSize();      // получение размеров карты
 };

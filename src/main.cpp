@@ -48,26 +48,3 @@ int main(int argc, char **argv)
     glutMainLoop();
     return 0;
 }
-
-// main.cpp7
-// #include <GL/freeglut.h>
-// #include "utils.hpp"
-
-// void Display() {
-//     glClear(GL_COLOR_BUFFER_BIT);
-//     DrawTexturedRectangle(PLATFORM_TEXTURE, {0.0f, 0.0f}, {1.0f, 0.3});
-//     glutSwapBuffers();
-// }
-
-
-// int main(int argc, char** argv) {
-//     glutInit(&argc, argv);
-//     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-//     glutInitWindowSize(800, 600);
-//     glutCreateWindow("Textured Rectangle");
-//     loadTextures();
-//     glutDisplayFunc(Display);
-//     glutMainLoop();
-    
-//     return 0;
-// }
