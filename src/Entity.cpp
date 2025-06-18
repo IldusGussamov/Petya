@@ -46,8 +46,8 @@ void Entity::updateBorders()
 
 void Entity::updatePosition()
 {
-    position.x += velocity.x * speedMultiplier;
-    position.y += velocity.y * speedMultiplier;
+    position.x += velocity.x;
+    position.y += velocity.y;
 }
 
 void Entity::resetVelocity()
@@ -79,21 +79,4 @@ Coordinate Entity::getBottomBorder() const
 void Entity::setPosition(Point position)
 {
     this->position = position;
-}
-
-void Entity::setSize(Dimension width, Dimension height)
-{
-    size.width = width;
-    size.height = height;
-    updateBorders();
-}
-
-void Entity::setMultiplyVelocity(float multiplier)
-{
-    this->speedMultiplier = multiplier;
-}
-
-float Entity::getSpeedMultiplier() const
-{
-    return speedMultiplier;
 }

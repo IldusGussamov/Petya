@@ -3,19 +3,15 @@
 #include "PowerfulBrick.hpp"
 #include "SimpleBrick.hpp"
 #include "SeriousBrick.hpp"
-#include "CombatBrick.hpp"
-#include "Rocket.hpp"
 #include <GL/freeglut.h>
 #include <iostream>
 #include <random>
-#include "MagicBrick.hpp"
 
 Map::Map(Point position, Size size) : platform(PLATFORM_POSITION, {0, 0})
 {
     this->position = position;
     this->size = size;
     this->generateBricks();
-    this->directionThrowBall  = 0;
 }
 
 void Map::generateBricks()
@@ -27,20 +23,8 @@ void Map::generateBricks()
     {
         for (int j = 0; j < COLS; j++)
         {
-            std::uniform_int_distribution<int> dist(1, 120);
+            std::uniform_int_distribution<int> dist(1, 100);
             int randomValue = dist(gen);
-            if (randomValue < 1)
-            {
-                bricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 3));
-            }
-            if (randomValue >= 113)
-            {
-                bricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 2));
-            }
-            if (randomValue >= 3 and randomValue < 4)
-            {
-                bricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 1));
-            }
             if (randomValue >= 70 and randomValue < 75)
             {
                 bricks.push_back(new SimpleBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
@@ -50,24 +34,9 @@ void Map::generateBricks()
                 bricks.push_back(new SeriousBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
             }
 
-            if (randomValue >= 85 and randomValue < 90)
+            if (randomValue >= 85)
             {
                 bricks.push_back(new PowerfulBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
-            }
-            if ((ROWS - ROWS / 5 > i and i > ROWS / 5) and (COLS - COLS / 5 > j and j > COLS / 5))
-            {
-                if (randomValue >= 90 and randomValue < 99)
-                {
-                    bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 1));
-                }
-                if (randomValue >= 99 && randomValue < 110)
-                {
-                    bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 2));
-                }
-                if (randomValue >= 110 && randomValue <= 113)
-                {
-                    bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 3));
-                }
             }
             if (dist(gen) <= 3)
                 bricks.back()->setMovePattern(0.0001, BRICK_WIDTH, dist(gen) % 4); // 10% шанс на движение
@@ -80,44 +49,16 @@ void Map::generateBricks()
 
 void Map::draw()
 {
-    DrawTexturedRectangle(MAP_TEXTURE, {position.x + size.width/2, position.y - size.height/2}, size); // отрисовка карты
+    glColor3f(0.04f, 0.1f, 0.18f); // цвет фона
+    drawRectangle(position, size);
     platform.draw();
-    if (!isThrowBall && !isGameOver){
-        glPushMatrix();
-        glTranslatef(balls[0].getPosition().x, balls[0].getPosition().y, 0);
-        glRotatef(directionThrowBall*180/M_PI, 0, 0, 1); // поворот направления броска мяча
-        glTranslatef(0, platform.getDimensions().height*5, 0);
-        DrawTexturedRectangle(SCOPE_TEXTURE, {0, 0}, {PLATFORM_WIDTH*0.25, PLATFORM_WIDTH*0.25}, -directionThrowBall*180/M_PI);
-        glEnd();
-        glPopMatrix();
-    }
     for (Brick *brick : bricks)
     {
         brick->draw();
     }
     for (Ball &ball : balls)
     {
-        if (ball.getStick() && !isGameOver)
-        {
-        glPushMatrix();
-        glTranslatef(balls[0].getPosition().x, balls[0].getPosition().y, 0);
-        glRotatef(directionThrowBall*180/M_PI, 0, 0, 1); // поворот направления броска мяча
-        glTranslatef(0, platform.getDimensions().height*5, 0);
-        DrawTexturedRectangle(SCOPE_TEXTURE, {0, 0}, {PLATFORM_WIDTH*0.25, PLATFORM_WIDTH*0.25}, -directionThrowBall*180/M_PI);
-        glEnd();
-        glPopMatrix();
-        }
         ball.draw();
-    }
-
-    for (Bonus &bonus : bonuses)
-    {
-        bonus.draw();
-    }
-
-    for (Rocket &rocket : rockets)
-    {
-        rocket.draw();
     }
 }
 
@@ -126,50 +67,30 @@ void Map::update()
     if (isGameOver)
         return;
 
-    // Проверка условий завершения игры
-    if (bricks.empty())
+    if (bricks.size() == 0)
     {
         isGameOver = true;
         return;
     }
 
-    if (platform.getHealth() <= 0)
+    if (!balls.size())
     {
-        isGameOver = true;
-        return;
-    }
-
-    // Если шаров нет, перезапускаем шар (если платформа жива)
-    if (balls.empty())
-    {
-        resetBonuses();
-        bonuses.clear();
-        rockets.clear();
-        directionThrowBall = 0; // сброс направления броска мяча
         platform.hit();
-        std::cout << platform.getHealth() << std::endl;
-        isThrowBall = false;
-        isThrowCapture = true;
-        isActivateStickingBonus = false;
+        this->isThrowBall = false;
         platform.setPosition(PLATFORM_POSITION);
-
-        if (platform.getHealth() > 0)
-        {
-            balls.emplace_back(BALL_START_POSITION, platform.getVelocity(), BALL_SIZE);
-        }
+        if (platform.getHealth())
+            this->balls.emplace_back(BALL_START_POSITION, platform.getVelocity(), BALL_SIZE);
         else
         {
-            isGameOver = true;
+            isGameOver = true; // если платформа уничтожена, то игра окончена
             return;
         }
     }
 
-    // Обновление платформы и проверка отскока от стен
     platform.update();
+
     bounceOffWalls();
 
-    // Обновление шаров и проверка столкновени
-    for (Ball &ball : balls)
     // Проверка коллизий кирпичей с паттерном движения
     for (Brick *brick : bricks)
     {
@@ -260,182 +181,49 @@ void Map::update()
 
     for (int i = 0; i < bricks.size();)
     {
-        if (!isThrowBall || ball.getStick())
+        if (!bricks[i]->getHealth())
         {
-            ball.setVelocity(platform.getVelocity());
-            ball.setMultiplyVelocity(platform.getSpeedMultiplier());
+            delete bricks[i];
+            bricks.erase(bricks.begin() + i);
         }
         else
         {
-            // Столкновение с платформой
-            if (ball.Collision(platform) and isActivateStickingBonus)
-            {   
-                ball.stick();
-                // Если бонус "липучка" активен, мяч прилипает к платформе
-                ball.setPosition({platform.getPosition().x, BALL_START_POSITION.y});
-                ball.setVelocity({0, 0}); // останавливаем мяч.
-                isActivateStickingBonus = false; // деактивируем бонус
-            } 
-            
-            // Столкновение с обычными кирпичами
+            ++i;
+        }
+    }
+
+    for (Ball &ball : balls)
+    {
+        if (!this->isThrowBall)
+        {
+            ball.setVelocity(platform.getVelocity());
+        }
+        else
+        {
+            ball.Collision(platform);
+            bool flag = false;
             for (Brick *brick : bricks)
             {
-                Velocity oldVel = ball.getVelocity();
-                bool collided = ball.Collision(*brick);
-                Velocity newVel = ball.getVelocity();
-
-                if (oldVel.x != newVel.x || oldVel.y != newVel.y)
-                {
+                Velocity old_vel = ball.getVelocity();
+                flag = (ball.Collision(*brick));
+                Velocity new_vel = ball.getVelocity();
+                if (old_vel.x != new_vel.x || old_vel.y != new_vel.y)
                     brick->takeDamage(1);
+                if (flag)
+                {
+                    flag = false;
                     break;
                 }
             }
         }
-
         ball.update();
-    }
-
-    // Удаление разрушенных обычных кирпичей
-    for (auto it = bricks.begin(); it != bricks.end();)
-    {
-        if ((*it)->isDestroyed())
-        {
-            if (dynamic_cast<CombatBrick*>(*it))
-            {
-                rockets.push_back(Rocket((*it)->getPosition(), ROCKET_WIDTH, ROCKET_HEIGHT));
-            }
-            if(dynamic_cast<MagicBrick*>(*it))
-            {
-                bonuses.push_back(Bonus((*it)->getPosition(), BONUS_WIDTH, BONUS_HEIGHT));
-            }
-            delete *it;
-            it = bricks.erase(it);
-        }
-        else
-        {
-            ++it;
-        }
-    }
-
-    // Обновление и проверка ракет
-    for (int i = 0; i < rockets.size();)
-    {
-        rockets[i].update();
-        rockets[i].setTarget(platform);
-        if (rockets[i].checkCollision(platform.shield) && platform.shield.isActivated())
-        {
-            rockets[i].Collision(platform.shield);
-            rockets[i].Bounce();
-            platform.shield.deactivate();
-            break;
-        }
-        if (rockets[i].checkCollision(platform))
-        {
-            platform.hit();
-            std::cout << platform.getHealth() << std::endl;
-            rockets.erase(rockets.begin() + i);
-            break;
-        }
-        if (rockets[i].getLeftBorder() < getLeftBorder())
-        {
-            rockets.erase(rockets.begin() + i);
-        }
-        if (rockets[i].getRightBorder() > getRightBorder())
-        {
-            rockets.erase(rockets.begin() + i);
-        }
-        if (rockets[i].getTopBorder() > getTopBorder())
-        {
-            rockets.erase(rockets.begin() + i);
-        }
-        if (rockets[i].getBottomBorder() < getButtomBorder())
-        {
-            rockets.erase(rockets.begin() + i);
-        }
-        ++i;
-    }
-
-    for (int i = 0; i < bonuses.size(); i++)
-    {
-        bonuses[i].update();
-        bonuses[i].Collision(platform);
-        if (bonuses[i].isHit)
-        {
-            if (bonuses[i].getBonusType() == 0) // сброс бонусов
-            {
-                resetBonuses();
-                std::cout << "Reset bonus" << std::endl;
-            }
-
-            if (bonuses[i].getBonusType() == 1) // увеличение скорости платформы
-            {
-                platform.setMultiplyVelocity(2);
-                std::cout << "+speed platform" << std::endl;
-            }
-            if (bonuses[i].getBonusType() == 2) // увеличение размера платформы
-            {
-                platform.setSize(PLATFORM_WIDTH * 2, PLATFORM_HEIGHT);
-                std::cout << "+size platform" << std::endl;
-            }
-            if (bonuses[i].getBonusType() == 3) // уменьшение размера платформы
-            {
-                platform.setSize(PLATFORM_WIDTH / 2, PLATFORM_HEIGHT);
-                std::cout << "-size platform" << std::endl;
-            }
-            if (bonuses[i].getBonusType() == 4) // увеличение скорости мяча
-            {
-                for (Ball &ball : balls)
-                {
-                    ball.setMultiplyVelocity(1.5);
-                    std::cout << "+speed ball" << std::endl;
-                }
-            }
-            if (bonuses[i].getBonusType() == 5 || bonuses[i].getBonusType() == 8) // удвоение количества шаров
-            {
-                addBall();
-                std::cout << "double ball" << std::endl;
-            }
-            if (bonuses[i].getBonusType() == 6) // инверсия платформы
-            {
-                platform.setMultiplyVelocity(-1);
-                std::cout << "inverse paltform speed" << std::endl;
-            }
-
-            if (bonuses[i].getBonusType() == 7 && isThrowCapture) // захват мяча
-            {
-                isActivateStickingBonus = true;
-                isThrowCapture = false;
-                std::cout << "stick" << std::endl;
-            }
-
-            if (bonuses[i].getBonusType() == 9) // Щит платформы
-            {
-                platform.shield.activate();
-            }
-
-            bonuses.erase(bonuses.begin() + i);
-            i--; // Уменьшаем индекс, чтобы не пропустить следующий бонус
-        }
     }
 }
 
 void Map::throwBall()
-{   if (!isCaptureThrown())
-    {
-        for(Ball &ball : balls)
-        {
-            if (ball.getStick())
-            {
-                ball.setVelocity(rotateVelocity({0, BALL_SPEED}, directionThrowBall));
-                ball.setMultiplyVelocity(abs(ball.getSpeedMultiplier()));
-                ball.setStick(false);
-                break;
-            }
-        }
-        isThrowCapture = true;
-    }
+{
     this->isThrowBall = true;
-    this->balls.front().setVelocity(rotateVelocity({0, BALL_SPEED}, directionThrowBall));
+    this->balls[0].setVelocity(rotateVelocity({0, BALL_SPEED}, 3.14 / 8));
 }
 
 void Map::bounceOffWalls()
@@ -490,11 +278,8 @@ void Map::addBall()
 
     for (Ball ball : balls)
     {
-        if (ball.getStick())
-            continue;
         float randomValue = dist(gen);
         extraBalls.emplace_back(ball.getPosition(), rotateVelocity(ball.getVelocity(), 2 * M_PI * randomValue / 100), BALL_SIZE);
-        extraBalls.back().setMultiplyVelocity(ball.getSpeedMultiplier());
     }
     balls.insert(balls.end(), extraBalls.begin(), extraBalls.end());
 }
@@ -502,53 +287,13 @@ void Map::addBall()
 void Map::resetMap()
 {
     isGameOver = false;
-    platform = Platform(PLATFORM_POSITION, {0, 0}); // Сброс платформы
-    balls.clear();                                  // Очистка шаров (если хранит объекты)
-    bonuses.clear();                                // Очистка бонусов
-    rockets.clear();                                // Очистка ракет
-    isThrowBall = false;                            // Мяч привязан к платформе
-
-    // Удаление обычных кирпичей
+    platform = Platform(PLATFORM_POSITION, {0, 0});
+    balls.clear();
+    isThrowBall = false;
     for (Brick *brick : bricks)
     {
-        if (brick)
-            delete brick;
+        delete brick;
     }
     bricks.clear();
-    rockets.clear();
-
-    generateBricks(); // Генерация новой карты
-}
-
-void Map::resetBonuses()
-{
-    platform.setMultiplyVelocity(1);
-    platform.setSize(PLATFORM_WIDTH, PLATFORM_HEIGHT);
-    platform.shield.deactivate();
-    for (Ball &ball : balls)
-    {
-        ball.setMultiplyVelocity(1);
-    }
-    // удаление всех мячей, кроме первого
-    while (balls.size() > 1)
-    {
-        balls.pop_back();
-    }; // Очистка бонусов
-}
-
-void Map::rotateLeftdirectionThrowBall()
-{
-    if (directionThrowBall <= MAX_BOUNCE_ANGLE)
-        directionThrowBall += M_PI / 80;
-}
-
-void Map::rotateRightdirectionThrowBall()
-{
-    if (directionThrowBall >= -MAX_BOUNCE_ANGLE)
-        directionThrowBall -= M_PI / 80; 
-}
-
-bool Map::isCaptureThrown() const
-{
-    return isThrowCapture;
+    generateBricks();
 }

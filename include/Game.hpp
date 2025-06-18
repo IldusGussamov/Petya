@@ -1,9 +1,5 @@
 #pragma once
 #include "Map.hpp"
-#include <chrono>
-#include "utils.hpp"
-
-extern std::chrono::time_point<std::chrono::steady_clock> lastFrameTime;
 
 extern bool PRESSED_KEY_A;
 extern bool PRESSED_KEY_D;
