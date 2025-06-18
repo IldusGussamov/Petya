@@ -1,56 +1,68 @@
 #pragma once
 
-#include "utils.hpp" // вспомогательные типы, функции и константы
+// Базовый класс для всех игровых объектов
+#include "utils.hpp" // Вспомогательные типы (Point, Velocity и др.), функции и константы
 
-class Entity
+class Entity 
 {
 public:
-    Entity(Point position, Velocity velocity, Dimension width, Dimension height); // конструктор
+    // Основной конструктор сущности
+    // position - начальная позиция центра объекта
+    // velocity - начальный вектор скорости
+    // width, height - размеры объекта
+    Entity(Point position, Velocity velocity, Dimension width, Dimension height);
 
-    virtual void draw() = 0; // отрисовка сущности
+    // Чисто виртуальные методы (должны быть реализованы в производных классах)
+    virtual void draw() = 0;    // Отрисовка объекта (зависит от конкретной сущности)
+    
+    virtual void update() = 0;  // Логика обновления состояния объекта
 
-    virtual void update() = 0; // обновление координат и границ
+    // Управление состоянием объекта
+    void setVelocity(Velocity velocity);      // Установка вектора скорости
 
-    void setVelocity(Velocity velocity); // установка скорости
+    void setPosition(Point position);         // Мгновенное перемещение в указанную позицию
 
-    void setPosition(Point position); // телепорт сущности на указанную позицию
+    void setSize(Dimension width, Dimension height); // Изменение размеров объекта
 
-    void setSize(Dimension width, Dimension height); // установка габаритов
+    void setMultiplyVelocity(float multiplier); // Умножение текущей скорости на множитель
 
-    void setMultiplyVelocity(float multiplier); // умножение скорости на множитель
+    void resetVelocity();                     // Сброс скорости в ноль
 
-    float getSpeedMultiplier() const; // получение множителя скорости
+    // Получение текущих параметров
+    float getSpeedMultiplier() const;  // Текущий множитель скорости
 
-    Velocity getVelocity() const; // получение скорости
+    Velocity getVelocity() const;      // Текущий вектор скорости
 
-    Point getPosition() const; // получение позиции
+    Point getPosition() const;         // Текущая позиция (центр)
 
-    Size getDimensions() const; // получение габаритов
+    Size getDimensions() const;        // Текущие размеры (ширина и высота)
 
-    bool checkCollision(const Entity &other); // проверка на столкновение с другой сущностью
+    // Работа с границами и коллизиями
+    bool checkCollision(const Entity &other); // Проверка столкновения с другим объектом
 
-    void updateBorders(); // обновление границ
+    void updateBorders();            // Пересчет границ после изменения позиции/размера
 
-    void updatePosition(); // обновление позиции
+    void updatePosition();           // Обновление позиции на основе текущей скорости
 
-    void resetVelocity(); // сброс скорости
+    // Получение границ объекта
+    Coordinate getLeftBorder() const;   // Левая граница (минимальная x-координата)
 
-    Coordinate getLeftBorder() const; // получение левой границы
+    Coordinate getRightBorder() const;  // Правая граница (максимальная x-координата)
 
-    Coordinate getRightBorder() const; // получение правой границы
+    Coordinate getTopBorder() const;    // Верхняя граница (максимальная y-координата)
 
-    Coordinate getTopBorder() const; // получение верхней границы
-
-    Coordinate getBottomBorder() const; // получение нижней границы
+    Coordinate getBottomBorder() const; // Нижняя граница (минимальная y-координата)
 
 protected:
-    Point position; // позиция сущности (центр)
+    // Внутреннее состояние объекта
+    Point position;    // Позиция центра объекта
 
-    Size size; // ширина и высота
+    Size size;        // Размеры (ширина и высота)
 
-    Point borders[4]; // границы сущности (Координаты вершин прямоугольника)
+    Point borders[4];  // Границы объекта (4 вершины прямоугольника)
+                       // Порядок: [0] левый-верхний, [1] правый-верхний
+                       //         [2] правый-нижний,  [3] левый-нижний
+    Velocity velocity; // Текущий вектор скорости
 
-    Velocity velocity; // скорость сущности
-
-    float speedMultiplier = 1; // множитель скорости, по умолчанию равен 1
+    float speedMultiplier = 1.0f; // Множитель скорости (по умолчанию 1)
 };

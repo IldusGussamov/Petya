@@ -9,7 +9,7 @@ bool isGameOver = false;
 const char *BALL_TEXTURE_PATH = "assets/textures/ball.png";
 GLuint BALL_TEXTURE = 0;
 
-extern const char *SHIELD_TEXTURE_PATH = "assets/textures/shield.png";
+const char *SHIELD_TEXTURE_PATH = "assets/textures/shield.png";
 GLuint SHIELD_TEXTURE = 0;
 
 const char *MAP_TEXTURE_PATH = "assets/textures/map.png";
@@ -127,9 +127,7 @@ void drawBorderRectangle(Point *borders)
     glEnd();
     glPopMatrix();
 }
-
-template <class T>
-T getNorm(T x, T y)
+Dimension getNorm(Coordinate x, Coordinate y)
 {
     return sqrt(pow(x, 2) + pow(y, 2));
 }

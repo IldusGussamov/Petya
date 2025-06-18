@@ -1,50 +1,46 @@
+// Подключение библиотеки GLUT для работы с графикой и окнами
 #include "GL/freeglut.h"
+// Подключение заголовка с логикой игры
 #include "Game.hpp"
-#include <iostream>
-
-void reshape(int width, int height) {
-    glViewport(0, 0, width, height); // Устанавливаем вьюпорт на всё окно
-    
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    
-    // Фиксируем соотношение 4:3, даже если окно изменилось
-    float targetAspect = 4.0f / 3.0f;
-    float currentAspect = (float)width / (float)height;
-    
-    if (currentAspect > targetAspect) {
-        // Окно шире, чем 4:3 — добавляем чёрные полосы по бокам
-        float viewWidth = height * targetAspect;
-        float margin = (width - viewWidth) / 2.0f;
-        glViewport(margin, 0, viewWidth, height); // Центрируем область отрисовки
-        glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0); // Стандартная проекция
-    } else {
-        // Окно уже, чем 4:3 — добавляем чёрные полосы сверху/снизу
-        float viewHeight = width / targetAspect;
-        float margin = (height - viewHeight) / 2.0f;
-        glViewport(0, margin, width, viewHeight); // Центрируем область отрисовки
-        glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0); // Стандартная проекция
-    }
-    
-    glMatrixMode(GL_MODELVIEW);
-}
-
 
 int main(int argc, char **argv)
 {
+    // Инициализация GLUT
     glutInit(&argc, argv);
-    glutInitWindowPosition(0, 0);
-    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-    glutCreateWindow("Petya");
-    // glutFullScreen();
-    loadTextures();
-    glutReshapeFunc(reshape);   
 
+    // Установка позиции окна (левый верхний угол экрана)
+    glutInitWindowPosition(0, 0);
+
+    // Установка размера окна
+    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    // Установка режима отображения: RGBA, глубина, двойная буферизация
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
+
+    // Создание окна с заголовком "Petya"
+    glutCreateWindow("Petya");
+
+    // Загрузка текстур
+    loadTextures();
+
+    // Установка функции обработки изменения размера окна
+    glutReshapeFunc(reshape);
+
+    // Установка функции отрисовки сцены
     glutDisplayFunc(renderScene);
+
+    // Установка функции обработки нажатия клавиш
     glutKeyboardFunc(keyboardDown);
+
+    // Установка таймера для обновления игры
     glutTimerFunc(500 / UPDATES, timerFunc, 0);
+
+    // Установка функции обработки отпускания клавиш
     glutKeyboardUpFunc(keyboardUp);
+
+    // Запуск основного цикла GLUT
     glutMainLoop();
+
+    // Завершение программы
     return 0;
 }

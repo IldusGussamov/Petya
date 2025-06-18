@@ -1,54 +1,97 @@
 #pragma once
+
 #include "Platform.hpp"
+
 #include "Ball.hpp"
+
 #include "Brick.hpp"
+
 #include "Rocket.hpp"
+
 #include <vector>
+
 #include <CombatBrick.hpp>
+
 #include "Bonus.hpp"
 
+// Класс Map представляет игровое поле и управляет всеми объектами на нем
+// Отвечает за:
+// - Хранение и отрисовку всех игровых объектов
+// - Обработку физики и столкновений
+// - Генерацию и управление бонусами
+// - Управление состоянием игры
 class Map
 {
 private:
-    Point position;            // позиция карты (левая верхняя вершина)
-    Size size;                 // размер карты (Ox вправо, а Oy вниз)
-    std::vector<Ball> balls;   // мячи
-    std::vector<Brick*> bricks; // плитки
-    std::vector<Rocket> rockets; // Хранение ракет на карте
-    std::vector<Bonus> bonuses; // бонусы
+    // Основные параметры карты
+    Point position;            // Позиция левого верхнего угла карты
 
-    bool isThrowCapture = true;
-    bool isThrowBall = false;  // статус полета мяча
+    Size size;                 // Размеры карты (ширина и высота)
+
+    // Коллекции игровых объектов
+    std::vector<Ball> balls;   // Все активные мячи на карте
+
+    std::vector<Brick*> bricks; // Указатели на все кирпичи (используется полиморфизм)
+
+    std::vector<Rocket> rockets; // Активные ракеты (от боевых кирпичей)
+
+    std::vector<Bonus> bonuses; // Активные бонусы, падающие вниз
+
+    // Флаги состояния
+    bool isThrowCapture = true; // Флаг режима "захвата" мяча платформой
+
+    bool isThrowBall = false;   // Флаг, указывающий что мяч в полете
 
 public:
-    Platform platform;         // платформа
+    Platform platform;         // Игровая платформа
 
-    Map(Point position, Size size); // конструктор
-    void draw();                    // отрисовка карты
-    void update();                  // обновление карты
-    void throwBall();               // бросок мяча
-    void bounceOffWalls();          // проверка столкновения о стену и отскок мяча
-    void generateBricks();          // генерация плиток
-    void addBall();
-    void resetMap(); // сброс карты
-    void resetBonuses(); // сброс бонусов
-    void rotateLeftdirectionThrowBall(); // поворот направления броска мяча влево
-    void rotateRightdirectionThrowBall(); // поворот направления броска мяча вправо 
+    // Основные методы
+    Map(Point position, Size size); // Инициализация карты с заданными параметрами
+    
+    void draw();                    // Отрисовка всех объектов карты
 
-    Angle directionThrowBall; // направление броска мяча
+    void update();                  // Обновление состояния всех объектов
 
-    Coordinate getLeftBorder();   // получение левой границы
-    Coordinate getRightBorder();  // получение правой границы
-    Coordinate getTopBorder();    // получение верхней границы
-    Coordinate getButtomBorder(); // получение нижней границы
+    void throwBall();               // Запуск мяча с платформы
 
-    bool isActivateStickingBonus; // флаг активации бонуса "липучка"
+    void bounceOffWalls();          // Обработка отскоков мячей от стен
 
-    bool isBallThrown() const; // проверка на то, что мяч брошен
-    bool isCaptureThrown() const;
+    void generateBricks();          // Создание уровня из кирпичей
 
-    ~Map();
+    void addBall();                 // Добавление нового мяча в игру
 
-    Point getPosition(); // получение позиции карты
-    Size getSize();      // получение размеров карты
+    void resetMap();                // Полный сброс состояния карты
+
+    void resetBonuses();            // Удаление всех бонусов
+
+    // Управление направлением броска
+    void rotateLeftdirectionThrowBall();  // Поворот направления броска против часовой
+
+    void rotateRightdirectionThrowBall(); // Поворот направления броска по часовой
+
+    Angle directionThrowBall; // Текущий угол направления броска мяча
+
+    // Границы игрового поля
+    Coordinate getLeftBorder();   // Левая граница (минимальная X-координата)
+
+    Coordinate getRightBorder();  // Правая граница (максимальная X-координата)
+
+    Coordinate getTopBorder();    // Верхняя граница (минимальная Y-координата)
+
+    Coordinate getButtomBorder(); // Нижняя граница (максимальная Y-координата)
+
+    // Состояния бонусов
+    bool isActivateStickingBonus; // Флаг активного бонуса "липучка" для платформы
+
+    // Проверки состояния
+    bool isBallThrown() const;    // Проверка, находится ли мяч в полете
+
+    bool isCaptureThrown() const; // Проверка режима захвата мяча
+
+    ~Map(); // Деструктор для очистки памяти
+
+    // Геттеры
+    Point getPosition(); // Получение позиции карты
+    
+    Size getSize();      // Получение размеров карты
 };

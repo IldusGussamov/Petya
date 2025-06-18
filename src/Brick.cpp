@@ -2,25 +2,29 @@
 #include <GL/glut.h>
 #include <utils.hpp>
 
+// Конструктор кирпича: инициализация позиции, размеров, здоровья и параметров движения
 Brick::Brick(Point position, Dimension width, Dimension height, Health health)
     : Entity(position, {0, 0}, width, height),
       health(health), destroyed(false),
       havePattern(false), moveDirection(0),
       moveSpeed(0), moveDistance(0), maxDistance(0)
 {
-    updateBorders();
+    updateBorders(); // обновляем границы кирпича
 }
 
+// Получить текущее здоровье кирпича
 Health Brick::getHealth() const
 {
     return health;
 }
 
+// Проверить, разрушен ли кирпич
 bool Brick::isDestroyed() const
 {
     return destroyed;
 }
 
+// Нанести урон кирпичу
 void Brick::takeDamage(int damage)
 {
     if (!destroyed)
@@ -34,38 +38,18 @@ void Brick::takeDamage(int damage)
     }
 }
 
+// Обновить состояние кирпича (разрушение, движение, границы)
 void Brick::update()
 {
     if (health <= 0)
     {
         destroyed = true;
     }
-    updateBorders();
-    updatePosition();
+    updateBorders();   // обновляем границы
+    updatePosition();  // двигаем кирпич, если задан паттерн движения
 }
 
-void Brick::draw()
-{
-    // if (destroyed)
-    //     return;
-
-    // // цвета для различия прочности
-    // if (health >= 3)
-    // {
-    //     glColor3f(1.0f, 0.0f, 0.0f); // красный
-    // }
-    // else if (health == 2)
-    // {
-    //     glColor3f(1.0f, 1.0f, 0.0f); // жёлтый
-    // }
-    // else
-    // {
-    //     glColor3f(0.0f, 0.0f, 1.0f); // синий
-    // }
-
-    // drawBorderRectangle(borders);
-}
-
+// Задать параметры движения кирпича (скорость, дистанция, направление)
 void Brick::setMovePattern(float speed, float distance, int initialDirection)
 {
     havePattern = (speed > 0 && distance > 0);
@@ -80,27 +64,35 @@ void Brick::setMovePattern(float speed, float distance, int initialDirection)
         switch (moveDirection)
         {
         case 0:
-            setVelocity({moveSpeed, 0});
-            break; // вправо
+            setVelocity({moveSpeed, 0});   // вправо
+            break;
         case 1:
-            setVelocity({-moveSpeed, 0});
-            break; // влево
+            setVelocity({-moveSpeed, 0});  // влево
+            break;
         case 2:
-            setVelocity({0, moveSpeed});
-            break; // вверх
+            setVelocity({0, moveSpeed});   // вверх
+            break;
         case 3:
-            setVelocity({0, -moveSpeed});
-            break; // вниз
+            setVelocity({0, -moveSpeed});  // вниз
+            break;
         }
     }
 }
 
+// Проверить, есть ли у кирпича паттерн движения
 bool Brick::hasPattern() const
 {
     return havePattern;
 }
 
+// Получить текущее направление движения кирпича
 int Brick::getCurrentPattern() const
 {
     return moveDirection;
+}
+
+// Отрисовка плитки
+void Brick::draw()
+{
+    // реализуется в наследниках
 }

@@ -1,22 +1,32 @@
 #pragma once
-#include "Map.hpp"
-#include <chrono>
-#include "utils.hpp"
 
-extern std::chrono::time_point<std::chrono::steady_clock> lastFrameTime;
+// Подключение необходимых заголовочных файлов
+#include "Map.hpp"                      // Заголовочный файл для работы с игровой картой
 
-extern bool PRESSED_KEY_A;
-extern bool PRESSED_KEY_D;
+#include <chrono>                       // Библиотека для работы со временем
 
-extern Map map;
+#include "utils.hpp"                    // Вспомогательные утилиты
 
-void renderScene();
+// Внешние переменные для управления состоянием игры
+extern std::chrono::time_point<std::chrono::steady_clock> lastFrameTime;  // Время последнего кадра для расчета дельты времени
 
-void keyboardDown(unsigned char K, int x, int y);
+extern bool PRESSED_KEY_A;              // Флаг нажатия клавиши A (движение влево)
 
-void keyboardUp(unsigned char K, int x, int y);
+extern bool PRESSED_KEY_D;              // Флаг нажатия клавиши D (движение вправо)
 
-void timerFunc(int value);
+extern Map map;                         // Основная игровая карта
 
+// Прототипы функций
+void renderScene();                     // Функция отрисовки игровой сцены
 
+// Функции обработки ввода с клавиатуры
+void keyboardDown(unsigned char K, int x, int y);  // Обработчик нажатия клавиш
 
+void keyboardUp(unsigned char K, int x, int y);    // Обработчик отпускания клавиш
+
+// Функции игрового процесса
+void timerFunc(int value);              // Основная функция игровой логики (вызывается по таймеру)
+
+void reshape(int width, int height);    // Функция обработки изменения размеров окна (сохранение пропорций)
+
+void reshape(int width, int height); // сохранение пропорций игрового окна

@@ -10,6 +10,7 @@
 #include <random>
 #include "MagicBrick.hpp"
 
+// Конструктор карты: инициализация платформы, генерация кирпичей и установка направления броска
 Map::Map(Point position, Size size) : platform(PLATFORM_POSITION, {0, 0})
 {
     this->position = position;
@@ -18,6 +19,7 @@ Map::Map(Point position, Size size) : platform(PLATFORM_POSITION, {0, 0})
     this->directionThrowBall = 0;
 }
 
+// Генерация кирпичей на карте с использованием случайных значений
 void Map::generateBricks()
 {
     Point actualPosition = {position.x + BRICK_WIDTH / 2, position.y - BRICk_HEIGHT / 2};
@@ -29,6 +31,8 @@ void Map::generateBricks()
         {
             std::uniform_int_distribution<int> dist(1, 120);
             int randomValue = dist(gen);
+
+            // Добавление различных типов кирпичей по вероятности
             if (randomValue < 3)
             {
                 bricks.push_back(new MagicBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 3));
@@ -49,11 +53,11 @@ void Map::generateBricks()
             {
                 bricks.push_back(new SeriousBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
             }
-
             if (randomValue >= 85 and randomValue < 90)
             {
                 bricks.push_back(new PowerfulBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT));
             }
+            // Добавление боевых кирпичей в центре поля
             if ((ROWS - ROWS / 5 > i and i > ROWS / 5) and (COLS - COLS / 5 > j and j > COLS / 5))
             {
                 if (randomValue >= 90 and randomValue < 99)
@@ -69,6 +73,7 @@ void Map::generateBricks()
                     bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 2));
                 }
             }
+            // Случайно делаем некоторые кирпичи движущимися
             if (!bricks.empty() && dist(gen) > 90)
             {
                 Coordinate speed = BALL_SPEED * 0.1;
@@ -83,31 +88,41 @@ void Map::generateBricks()
     }
 }
 
+// Отрисовка карты, платформы, кирпичей, шаров, бонусов и ракет
 void Map::draw()
 {
-    DrawTexturedRectangle(MAP_TEXTURE, {position.x + size.width / 2, position.y - size.height / 2}, size); // отрисовка карты
+    // Отрисовка текстурированного фона карты
+    DrawTexturedRectangle(MAP_TEXTURE, {position.x + size.width / 2, position.y - size.height / 2}, size);
     platform.draw();
+
+    // Отрисовка направляющей броска мяча, если мяч ещё не брошен
     if (!isThrowBall && !isGameOver)
     {
+        glColor3f(1, 1, 1);
         glPushMatrix();
         glTranslatef(balls[0].getPosition().x, balls[0].getPosition().y, 0);
-        glRotatef(directionThrowBall * 180 / M_PI, 0, 0, 1); // поворот направления броска мяча
+        glRotatef(directionThrowBall * 180 / M_PI, 0, 0, 1);
         glTranslatef(0, platform.getDimensions().height * 5, 0);
         DrawTexturedRectangle(SCOPE_TEXTURE, {0, 0}, {PLATFORM_WIDTH * 0.25, PLATFORM_WIDTH * 0.25}, -directionThrowBall * 180 / M_PI);
         glEnd();
         glPopMatrix();
     }
+
+    // Отрисовка всех кирпичей
     for (Brick *brick : bricks)
     {
         brick->draw();
     }
+
+    // Отрисовка шаров и направляющей для "липких" шаров
     for (Ball &ball : balls)
     {
         if (ball.getStick() && !isGameOver)
         {
+            glColor3f(1, 1, 1);
             glPushMatrix();
             glTranslatef(balls[0].getPosition().x, balls[0].getPosition().y, 0);
-            glRotatef(directionThrowBall * 180 / M_PI, 0, 0, 1); // поворот направления броска мяча
+            glRotatef(directionThrowBall * 180 / M_PI, 0, 0, 1);
             glTranslatef(0, platform.getDimensions().height * 5, 0);
             DrawTexturedRectangle(SCOPE_TEXTURE, {0, 0}, {PLATFORM_WIDTH * 0.25, PLATFORM_WIDTH * 0.25}, -directionThrowBall * 180 / M_PI);
             glEnd();
@@ -116,17 +131,20 @@ void Map::draw()
         ball.draw();
     }
 
+    // Отрисовка бонусов
     for (Bonus &bonus : bonuses)
     {
         bonus.draw();
     }
 
+    // Отрисовка ракет
     for (Rocket &rocket : rockets)
     {
         rocket.draw();
     }
 }
 
+// Основной игровой цикл: обновление состояния карты, платформы, шаров, кирпичей, бонусов и ракет
 void Map::update()
 {
     if (isGameOver)
@@ -151,7 +169,7 @@ void Map::update()
         resetBonuses();
         bonuses.clear();
         rockets.clear();
-        directionThrowBall = 0; // сброс направления броска мяча
+        directionThrowBall = 0;
         platform.hit();
         std::cout << platform.getHealth() << std::endl;
         isThrowBall = false;
@@ -174,13 +192,14 @@ void Map::update()
     platform.update();
     bounceOffWalls();
 
+    // Обработка движения и коллизий для движущихся кирпичей
     for (Brick *brick : bricks)
     {
         if (brick->hasPattern())
         {
             // Проверка коллизии с границами карты
             int currentDirection = brick->getCurrentPattern();
-            const float eps = std::min(BRICK_WIDTH, BRICk_HEIGHT) * 0.01f; // 1% от меньшего размера - погрешность для коллизии
+            const float eps = std::min(BRICK_WIDTH, BRICk_HEIGHT) * 0.01f;
 
             // Проверка коллизий с границами
             bool collisionWithMap = false;
@@ -235,33 +254,26 @@ void Map::update()
                 }
             }
 
-            // Если есть коллизия, меняем направление
+            // Если есть коллизия, меняем направление движения кирпича
             if (collisionWithMap || collisionWithBricks)
             {
                 int newDirection = currentDirection;
                 switch (currentDirection)
                 {
-                case 0:
-                    newDirection = 1;
-                    break; // Вправо -> Влево
-                case 1:
-                    newDirection = 0;
-                    break; // Влево -> Вправо
-                case 2:
-                    newDirection = 3;
-                    break; // Вверх -> Вниз
-                case 3:
-                    newDirection = 2;
-                    break; // Вниз -> Вверх
+                case 0: newDirection = 1; break; // Вправо -> Влево
+                case 1: newDirection = 0; break; // Влево -> Вправо
+                case 2: newDirection = 3; break; // Вверх -> Вниз
+                case 3: newDirection = 2; break; // Вниз -> Вверх
                 }
-                float speed = fabs(brick->getVelocity().x ?: brick->getVelocity().y);
+                // Вычисляем скорость для смены направления
+                float speed = (brick->getVelocity().x != 0) ? fabs(brick->getVelocity().x) : fabs(brick->getVelocity().y);
                 brick->setMovePattern(speed, BRICK_WIDTH, newDirection);
             }
         }
         brick->update();
     }
 
-    // Обновление шаров и проверка столкновени
+    // Обновление шаров и обработка столкновений с платформой и кирпичами
     for (Ball &ball : balls)
     {
         if (!isThrowBall || ball.getStick())
@@ -271,17 +283,16 @@ void Map::update()
         }
         else
         {
-            // Столкновение с платформой
+            // Столкновение с платформой и бонусом "липучка"
             if (ball.Collision(platform) and isActivateStickingBonus)
             {
                 ball.stick();
-                // Если бонус "липучка" активен, мяч прилипает к платформе
                 ball.setPosition({platform.getPosition().x, BALL_START_POSITION.y});
-                ball.setVelocity({0, 0});        // останавливаем мяч.
-                isActivateStickingBonus = false; // деактивируем бонус
+                ball.setVelocity({0, 0});
+                isActivateStickingBonus = false;
             }
 
-            // Столкновение с обычными кирпичами
+            // Столкновение с кирпичами
             for (Brick *brick : bricks)
             {
                 Velocity oldVel = ball.getVelocity();
@@ -295,11 +306,10 @@ void Map::update()
                 }
             }
         }
-
         ball.update();
     }
 
-    // Удаление разрушенных обычных кирпичей
+    // Удаление разрушенных кирпичей и генерация бонусов/ракет
     for (auto it = bricks.begin(); it != bricks.end();)
     {
         if ((*it)->isDestroyed())
@@ -321,7 +331,7 @@ void Map::update()
         }
     }
 
-    // Обновление и проверка ракет
+    // Обновление и обработка ракет
     for (int i = 0; i < rockets.size();)
     {
         rockets[i].update();
@@ -359,18 +369,19 @@ void Map::update()
         ++i;
     }
 
+    // Обновление и обработка бонусов
     for (int i = 0; i < bonuses.size(); i++)
     {
         bonuses[i].update();
         bonuses[i].Collision(platform);
         if (bonuses[i].isHit)
         {
+            // Обработка различных типов бонусов
             if (bonuses[i].getBonusType() == 0) // сброс бонусов
             {
                 resetBonuses();
                 std::cout << "Reset bonus" << std::endl;
             }
-
             if (bonuses[i].getBonusType() == 1) // увеличение скорости платформы
             {
                 platform.setMultiplyVelocity(2);
@@ -404,25 +415,23 @@ void Map::update()
                 platform.setMultiplyVelocity(-1);
                 std::cout << "inverse paltform speed" << std::endl;
             }
-
             if (bonuses[i].getBonusType() == 7 && isThrowCapture) // захват мяча
             {
                 isActivateStickingBonus = true;
                 isThrowCapture = false;
                 std::cout << "stick" << std::endl;
             }
-
             if (bonuses[i].getBonusType() == 9) // Щит платформы
             {
                 platform.shield.activate();
             }
-
             bonuses.erase(bonuses.begin() + i);
             i--; // Уменьшаем индекс, чтобы не пропустить следующий бонус
         }
     }
 }
 
+// Бросок мяча с платформы
 void Map::throwBall()
 {
     if (!isCaptureThrown())
@@ -443,47 +452,57 @@ void Map::throwBall()
     this->balls.front().setVelocity(rotateVelocity({0, BALL_SPEED}, directionThrowBall));
 }
 
+// Проверка и обработка отскока шаров от стен карты
 void Map::bounceOffWalls()
 {
     for (int i = 0; i < balls.size(); ++i)
     {
         Ball &ball = balls[i];
-        if (ball.getLeftBorder() <= this->getLeftBorder()) // столкновения мяча с левой границей карты
+        if (ball.getLeftBorder() <= this->getLeftBorder())
             ball.setVelocity(calculateBounceDirection(ball.getVelocity(), {1, 0}));
 
-        if (ball.getRightBorder() >= this->getRightBorder()) // столкновение мяча с правой границей карты
+        if (ball.getRightBorder() >= this->getRightBorder())
             ball.setVelocity(calculateBounceDirection(ball.getVelocity(), {-1, 0}));
 
-        if (ball.getTopBorder() >= this->getTopBorder()) // столкновение мяча с верхней границей карты
+        if (ball.getTopBorder() >= this->getTopBorder())
             ball.setVelocity(calculateBounceDirection(ball.getVelocity(), {0, -1}));
 
-        if (ball.getBottomBorder() <= this->getButtomBorder()) // столкновение мяча с нижней границей карты
-            balls.erase(balls.begin() + i);                    // удаление мяча, если он упал за нижнюю границу карты
+        if (ball.getBottomBorder() <= this->getButtomBorder())
+            balls.erase(balls.begin() + i);
     }
 }
 
+// Получить левую границу карты
 Coordinate Map::getLeftBorder()
 {
     return position.x;
 }
+
+// Получить правую границу карты
 Coordinate Map::getRightBorder()
 {
     return position.x + size.width;
 }
+
+// Получить верхнюю границу карты
 Coordinate Map::getTopBorder()
 {
     return position.y;
 }
+
+// Получить нижнюю границу карты
 Coordinate Map::getButtomBorder()
 {
     return position.y - size.height;
 }
 
+// Проверка, был ли мяч брошен
 bool Map::isBallThrown() const
 {
     return isThrowBall;
 }
 
+// Добавить дополнительный шар (например, при бонусе)
 void Map::addBall()
 {
     if (!isBallThrown())
@@ -504,16 +523,17 @@ void Map::addBall()
     balls.insert(balls.end(), extraBalls.begin(), extraBalls.end());
 }
 
+// Сбросить карту и все игровые объекты
 void Map::resetMap()
 {
     isGameOver = false;
-    platform = Platform(PLATFORM_POSITION, {0, 0}); // Сброс платформы
-    balls.clear();                                  // Очистка шаров (если хранит объекты)
-    bonuses.clear();                                // Очистка бонусов
-    rockets.clear();                                // Очистка ракет
-    isThrowBall = false;                            // Мяч привязан к платформе
+    platform = Platform(PLATFORM_POSITION, {0, 0});
+    balls.clear();
+    bonuses.clear();
+    rockets.clear();
+    isThrowBall = false;
 
-    // Удаление обычных кирпичей
+    // Удаление всех кирпичей
     for (Brick *brick : bricks)
     {
         if (brick)
@@ -522,9 +542,10 @@ void Map::resetMap()
     bricks.clear();
     rockets.clear();
 
-    generateBricks(); // Генерация новой карты
+    generateBricks();
 }
 
+// Сбросить все бонусы и вернуть платформу и мячи к исходным параметрам
 void Map::resetBonuses()
 {
     platform.setMultiplyVelocity(1);
@@ -534,30 +555,34 @@ void Map::resetBonuses()
     {
         ball.setMultiplyVelocity(1);
     }
-    // удаление всех мячей, кроме первого
+    // Удаление всех мячей, кроме первого
     while (balls.size() > 1)
     {
         balls.pop_back();
-    }; // Очистка бонусов
+    }
 }
 
+// Повернуть направление броска мяча влево
 void Map::rotateLeftdirectionThrowBall()
 {
     if (directionThrowBall <= MAX_BOUNCE_ANGLE)
         directionThrowBall += M_PI / 80;
 }
 
+// Повернуть направление броска мяча вправо
 void Map::rotateRightdirectionThrowBall()
 {
     if (directionThrowBall >= -MAX_BOUNCE_ANGLE)
         directionThrowBall -= M_PI / 80;
 }
 
+// Проверка, был ли выполнен захват мяча
 bool Map::isCaptureThrown() const
 {
     return isThrowCapture;
 }
 
+// Деструктор карты: удаление всех кирпичей
 Map::~Map()
 {
     for (Brick *brick : bricks)
