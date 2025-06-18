@@ -28,6 +28,7 @@ add_executable(arkanoid
     src/MagicBrick.cpp
     src/Bonus.cpp
     src/Rocket.cpp
+    src/Shield.cpp
     )
 
 

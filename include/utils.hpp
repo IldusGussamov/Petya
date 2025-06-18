@@ -40,6 +40,9 @@ struct Velocity
 extern GLuint BALL_TEXTURE; // текстура мяча
 extern const char *BALL_TEXTURE_PATH; // путь к текстуре мяча
 
+extern GLuint SHIELD_TEXTURE; // текстура щита
+extern const char *SHIELD_TEXTURE_PATH; // путь к текстуре щита
+
 extern GLuint MAP_TEXTURE; // текстура карты
 extern const char *MAP_TEXTURE_PATH; // путь к текстуре карты
 

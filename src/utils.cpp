@@ -9,10 +9,13 @@ bool isGameOver = false;
 const char *BALL_TEXTURE_PATH = "assets/textures/ball.png";
 GLuint BALL_TEXTURE = 0;
 
+extern const char *SHIELD_TEXTURE_PATH = "assets/textures/shield.png";
+GLuint SHIELD_TEXTURE = 0;
+
 const char *MAP_TEXTURE_PATH = "assets/textures/map.png";
 GLuint MAP_TEXTURE = 0;
 
-const char *BACKGROUND_TEXTURE_PATH = "assets/textures/background.png"; 
+const char *BACKGROUND_TEXTURE_PATH = "assets/textures/background.jpg"; 
 GLuint BACKGROUND_TEXTURE = 0;
 
 const char *SIMPLE_BRICK_TEXTURE_PATH = "assets/textures/brick1.png";
@@ -236,6 +239,7 @@ void loadTextures()
     PLATFORM_2_TEXTURE = LoadTexture(PLATFORM_2_TEXTURE_PATH);
     PLATFORM_3_TEXTURE = LoadTexture(PLATFORM_3_TEXTURE_PATH);
     SCOPE_TEXTURE = LoadTexture(SCOPE_TEXTURE_PATH);
+    SHIELD_TEXTURE = LoadTexture(SHIELD_TEXTURE_PATH);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -2,14 +2,18 @@
 #include <GL/freeglut.h>
 #include "utils.hpp"
 
-Platform::Platform(Point position, Velocity velocity) : Entity(position, velocity, PLATFORM_WIDTH, PLATFORM_HEIGHT)
+Platform::Platform(Point position, Velocity velocity) : Entity(position, velocity, PLATFORM_WIDTH, PLATFORM_HEIGHT), shield(position, size)
 {
     hp = PLATFORM_HEALTH + 1; // начальное здоровье платформы
-    updateBorders();   
+    updateBorders();  
 }
 
  void Platform::draw()
  {
+    if (shield.isActivated())
+    {
+        shield.draw();
+    }
     switch (getHealth()) {
         case 3: DrawTexturedRectangle(PLATFORM_3_TEXTURE, this->position, size); break;
         case 2: DrawTexturedRectangle(PLATFORM_2_TEXTURE, this->position, size); break;
@@ -21,6 +25,9 @@ void Platform::update()
 {
     position.x += velocity.x * speedMultiplier;
     position.y += velocity.y * speedMultiplier;
+    shield.setPosition(position);
+    shield.setSize(size.width, size.height);
+    shield.update();
     updateBorders();
 }
 

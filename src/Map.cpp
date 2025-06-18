@@ -231,12 +231,35 @@ void Map::update()
     {
         rockets[i].update();
         rockets[i].setTarget(platform);
+        if (rockets[i].checkCollision(platform.shield) && platform.shield.isActivated())
+        {
+            rockets[i].Collision(platform.shield);
+            rockets[i].Bounce();
+            platform.shield.deactivate();
+            break;
+        }
         if (rockets[i].checkCollision(platform))
         {
             platform.hit();
             std::cout << platform.getHealth() << std::endl;
             rockets.erase(rockets.begin() + i);
             break;
+        }
+        if (rockets[i].getLeftBorder() < getLeftBorder())
+        {
+            rockets.erase(rockets.begin() + i);
+        }
+        if (rockets[i].getRightBorder() > getRightBorder())
+        {
+            rockets.erase(rockets.begin() + i);
+        }
+        if (rockets[i].getTopBorder() > getTopBorder())
+        {
+            rockets.erase(rockets.begin() + i);
+        }
+        if (rockets[i].getBottomBorder() < getButtomBorder())
+        {
+            rockets.erase(rockets.begin() + i);
         }
         ++i;
     }
@@ -294,10 +317,10 @@ void Map::update()
                 std::cout << "stick" << std::endl;
             }
 
-            // if (bonuses[i].getBonusType() == 9 && isThrowCapture) // Щит платформы
-            // {
-                // some code ..
-            // }
+            if (bonuses[i].getBonusType() == 9) // Щит платформы
+            {
+                platform.shield.activate();
+            }
 
             bonuses.erase(bonuses.begin() + i);
             i--; // Уменьшаем индекс, чтобы не пропустить следующий бонус
@@ -313,6 +336,7 @@ void Map::throwBall()
             if (ball.getStick())
             {
                 ball.setVelocity(rotateVelocity({0, BALL_SPEED}, directionThrowBall));
+                ball.setMultiplyVelocity(abs(ball.getSpeedMultiplier()));
                 ball.setStick(false);
                 break;
             }
@@ -409,6 +433,7 @@ void Map::resetBonuses()
 {
     platform.setMultiplyVelocity(1);
     platform.setSize(PLATFORM_WIDTH, PLATFORM_HEIGHT);
+    platform.shield.deactivate();
     for (Ball &ball : balls)
     {
         ball.setMultiplyVelocity(1);

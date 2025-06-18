@@ -9,7 +9,8 @@ Bonus::Bonus(Point position, Dimension width, Dimension height)
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<int> dist(1, 100);
-        bonusType = dist(gen) % 9; // случайный тип бонуса
+        // bonusType = dist(gen) % 10; // случайный тип бонуса
+        bonusType = 9;
         
 }
 
@@ -25,7 +26,7 @@ void Bonus::draw()
         case 6: DrawTexturedRectangle(BONUS_SWAP_TEXTURE, this->position, size); break;
         case 7: DrawTexturedRectangle(BONUS_MAGNET_TEXTURE, this->position, size); break;
         case 8: DrawTexturedRectangle(BONUS_X2_TEXTURE, this->position, size); break;
-       // case 9: DrawTexturedRectangle(BONUS_SHIELD_TEXTURE, this->position, size); break;
+        case 9: DrawTexturedRectangle(BONUS_SHIELD_TEXTURE, this->position, size); break;
     }
 }
 
