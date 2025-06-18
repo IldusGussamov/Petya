@@ -20,6 +20,7 @@ add_executable(arkanoid
     src/Brick.cpp
     src/utils.cpp
     src/Map.cpp
+    src/MapGenerator.cpp
     src/Game.cpp
     src/PowerfulBrick.cpp
     src/SimpleBrick.cpp
