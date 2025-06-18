@@ -11,7 +11,7 @@ void SeriousBrick::draw()
     if (isDestroyed())
         return;
 
-    // Желтый при 2 HP, оранжевый при 1 HP
+    // фиолетовый при 2 хп, синий при 1 хп
     switch (getHealth())
     {
         case 2: DrawTexturedRectangle(SERIOUS_BRICK_TEXTURE, this->position, size); break;

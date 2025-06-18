@@ -69,6 +69,8 @@ void Map::generateBricks()
                     bricks.push_back(new CombatBrick(actualPosition, BRICK_WIDTH, BRICk_HEIGHT, 3));
                 }
             }
+            if (dist(gen) <= 3)
+                bricks.back()->setMovePattern(0.0001, BRICK_WIDTH, dist(gen) % 4); // 10% шанс на движение
             actualPosition.x += BRICK_WIDTH;
         }
         actualPosition.x = position.x + BRICK_WIDTH / 2;
@@ -168,6 +170,95 @@ void Map::update()
 
     // Обновление шаров и проверка столкновени
     for (Ball &ball : balls)
+    // Проверка коллизий кирпичей с паттерном движения
+    for (Brick *brick : bricks)
+    {
+        if (brick->hasPattern())
+        {
+            // Проверка коллизии с границами карты
+            int currentDirection = brick->getCurrentPattern();
+            const float eps = std::min(BRICK_WIDTH, BRICk_HEIGHT) * 0.01f; // 1% от меньшего размера - погрешность для коллизии
+
+            // Проверка коллизий с границами
+            bool collisionWithMap = false;
+            switch (currentDirection)
+            {
+            case 0: // Вправо
+                collisionWithMap = (brick->getRightBorder() + eps >= getRightBorder());
+                break;
+            case 1: // Влево
+                collisionWithMap = (brick->getLeftBorder() - eps <= getLeftBorder());
+                break;
+            case 2: // Вверх
+                collisionWithMap = (brick->getTopBorder() + eps >= getTopBorder());
+                break;
+            case 3: // Вниз
+                collisionWithMap = (brick->getBottomBorder() - eps <= (getButtomBorder() + PLATFORM_ZONE));
+                break;
+            }
+            // Проверка коллизии с другими кирпичами
+            bool collisionWithBricks = false;
+
+            if (!collisionWithMap)
+            {
+            for (Brick *otherBrick : bricks)
+            {
+                if (brick == otherBrick || otherBrick->isDestroyed())
+                    continue;
+
+                // Проверяем только кирпичи в направлении движения с учетом eps
+                bool isInDirection = false;
+                switch (currentDirection)
+                {
+                case 0: // Вправо
+                    isInDirection = (otherBrick->getLeftBorder() >= brick->getRightBorder() - eps);
+                    break;
+                case 1: // Влево
+                    isInDirection = (otherBrick->getRightBorder() <= brick->getLeftBorder() + eps);
+                    break;
+                case 2: // Вверх
+                    isInDirection = (otherBrick->getBottomBorder() >= brick->getTopBorder() - eps);
+                    break;
+                case 3: // Вниз
+                    isInDirection = (otherBrick->getTopBorder() <= brick->getBottomBorder() + eps);
+                    break;
+                }
+
+                if (isInDirection && brick->checkCollision(*otherBrick))
+                {
+                    collisionWithBricks = true;
+                    break;
+                }
+            }
+            }
+
+            // Если есть коллизия, меняем направление
+            if (collisionWithMap || collisionWithBricks)
+            {
+                int newDirection = currentDirection;
+                switch (currentDirection)
+                {
+                case 0:
+                    newDirection = 1;
+                    break; // Вправо -> Влево
+                case 1:
+                    newDirection = 0;
+                    break; // Влево -> Вправо
+                case 2:
+                    newDirection = 3;
+                    break; // Вверх -> Вниз
+                case 3:
+                    newDirection = 2;
+                    break; // Вниз -> Вверх
+                }
+                float speed = fabs(brick->getVelocity().x ?: brick->getVelocity().y);
+                brick->setMovePattern(speed, BRICK_WIDTH, newDirection);
+            }
+        }
+        brick->update();
+    }
+
+    for (int i = 0; i < bricks.size();)
     {
         if (!isThrowBall || ball.getStick())
         {
