@@ -15,6 +15,12 @@ public:
 
     void setPosition(Point position); // телепорт сущности на указанную позицию
 
+    void setSize(Dimension width, Dimension height); // установка габаритов
+
+    void setMultiplyVelocity(float multiplier); // умножение скорости на множитель
+
+    float getSpeedMultiplier() const; // получение множителя скорости
+
     Velocity getVelocity() const; // получение скорости
 
     Point getPosition() const; // получение позиции
@@ -45,4 +51,6 @@ protected:
     Point borders[4]; // границы сущности (Координаты вершин прямоугольника)
 
     Velocity velocity; // скорость сущности
+
+    float speedMultiplier = 1; // множитель скорости, по умолчанию равен 1
 };
