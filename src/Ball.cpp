@@ -1,7 +1,6 @@
 #include "Ball.hpp"
 #include "Platform.hpp"
 #include <GL/freeglut.h>
-#include <iostream>
 
 // Конструктор шара: инициализация позиции, скорости и размера
 Ball::Ball(Point position, Velocity velocity, Dimension size) : Entity(position, velocity, size, size)

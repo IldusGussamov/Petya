@@ -6,7 +6,6 @@
 #include "CombatBrick.hpp"
 #include "Rocket.hpp"
 #include <GL/freeglut.h>
-#include <iostream>
 #include <random>
 #include "MagicBrick.hpp"
 
@@ -171,7 +170,6 @@ void Map::update()
         rockets.clear();
         directionThrowBall = 0;
         platform.hit();
-        std::cout << platform.getHealth() << std::endl;
         isThrowBall = false;
         isThrowCapture = true;
         isActivateStickingBonus = false;
@@ -346,7 +344,6 @@ void Map::update()
         if (rockets[i].checkCollision(platform))
         {
             platform.hit();
-            std::cout << platform.getHealth() << std::endl;
             rockets.erase(rockets.begin() + i);
             break;
         }
@@ -380,46 +377,38 @@ void Map::update()
             if (bonuses[i].getBonusType() == 0) // сброс бонусов
             {
                 resetBonuses();
-                std::cout << "Reset bonus" << std::endl;
             }
             if (bonuses[i].getBonusType() == 1) // увеличение скорости платформы
             {
                 platform.setMultiplyVelocity(2);
-                std::cout << "+speed platform" << std::endl;
             }
             if (bonuses[i].getBonusType() == 2) // увеличение размера платформы
             {
                 platform.setSize(PLATFORM_WIDTH * 2, PLATFORM_HEIGHT);
-                std::cout << "+size platform" << std::endl;
             }
             if (bonuses[i].getBonusType() == 3) // уменьшение размера платформы
             {
                 platform.setSize(PLATFORM_WIDTH / 2, PLATFORM_HEIGHT);
-                std::cout << "-size platform" << std::endl;
             }
             if (bonuses[i].getBonusType() == 4) // увеличение скорости мяча
             {
                 for (Ball &ball : balls)
                 {
                     ball.setMultiplyVelocity(1.5);
-                    std::cout << "+speed ball" << std::endl;
                 }
             }
             if (bonuses[i].getBonusType() == 5 || bonuses[i].getBonusType() == 8) // удвоение количества шаров
             {
                 addBall();
-                std::cout << "double ball" << std::endl;
             }
             if (bonuses[i].getBonusType() == 6) // инверсия платформы
             {
                 platform.setMultiplyVelocity(-1);
-                std::cout << "inverse paltform speed" << std::endl;
             }
             if (bonuses[i].getBonusType() == 7 && isThrowCapture) // захват мяча
             {
                 isActivateStickingBonus = true;
                 isThrowCapture = false;
-                std::cout << "stick" << std::endl;
             }
             if (bonuses[i].getBonusType() == 9) // Щит платформы
             {

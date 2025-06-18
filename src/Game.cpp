@@ -1,6 +1,5 @@
 #include "Game.hpp"
 #include <GL/freeglut.h>
-#include <iostream>
 #include <chrono>
 #include "utils.hpp"
 
@@ -100,12 +99,10 @@ void timerFunc(int value)
         if (PRESSED_KEY_D && map.getLeftBorder() >= map.platform.getLeftBorder())
         {
             map.platform.resetVelocity();
-            std::cout << "D" << std::endl;
         }
         if (PRESSED_KEY_A && map.getRightBorder() <= map.platform.getRightBorder())
         {
             map.platform.resetVelocity();
-            std::cout << "A" << std::endl;
         }
     }
 

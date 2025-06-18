@@ -1,7 +1,6 @@
 // Реализация класса Entity
 
 #include "Entity.hpp"
-#include <iostream>
 
 // Конструктор сущности: инициализация позиции, скорости и размеров
 Entity::Entity(Point position, Velocity velocity, Dimension width, Dimension height)
