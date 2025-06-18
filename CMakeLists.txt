@@ -49,3 +49,7 @@ target_link_libraries(arkanoid PRIVATE
     OpenGL::GL
     ${GLUT_LIBRARIES}
 )
+
+if (WIN32)
+    set_target_properties(arkanoid PROPERTIES WIN32_EXECUTABLE TRUE)
+endif()

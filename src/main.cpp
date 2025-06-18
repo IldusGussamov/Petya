@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 
     // Установка режима отображения: RGBA, глубина, двойная буферизация
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-
+    
     // Создание окна с заголовком "Petya"
     glutCreateWindow("Petya");
 
